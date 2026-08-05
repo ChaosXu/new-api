@@ -64,7 +64,7 @@ query：`p`（页码）、`page_size`/`ps`/`size`（每页条数，上限 100）
 | 资源 | 目录 | 路由前缀 | 端点数 |
 |---|---|---|---|
 | 用户管理（admin CRUD） | [user](./user/) | `/api/user/`(admin CRUD) | 7 |
-| 用户认证 | [user/auth](./user/auth/) | `/api/user/{login,register,reset,auth/*}` | 7 |
+| 用户认证 | [user/auth](./user/auth/) | `/api/user/{login,register,reset,auth/*}` | 6 |
 | 用户自助 | [user/self](./user/self/) | `/api/user/self`、`/api/user/{token,aff,groups,models,setting}` | 9 |
 | Passkey | [user/passkey](./user/passkey/) | `/api/user/passkey/*` | 9 |
 | 双因素认证 | [user/2fa](./user/2fa/) | `/api/user/2fa/*`、`/api/user/:id/2fa` | 7 |
@@ -79,7 +79,7 @@ query：`p`（页码）、`page_size`/`ps`/`size`（每页条数，上限 100）
 | 资源 | 目录 | 路由前缀 | 端点数 |
 |---|---|---|---|
 | OAuth 登录 | [oauth](./oauth/) | `/api/oauth/{state,:provider,wechat,telegram}` | 4 |
-| OAuth 绑定 | [oauth/bind](./oauth/bind/) | `/api/oauth/*/bind`、`/api/user/oauth/bindings` | 8 |
+| OAuth 绑定 | [oauth/bind](./oauth/bind/) | `/api/oauth/*/bind`、`/api/user/oauth/bindings`、`/api/user/:id/bindings/:binding_type` | 9 |
 | 自定义 OAuth | [custom-oauth-provider](./custom-oauth-provider/) | `/api/custom-oauth-provider` | 6 |
 
 ### 渠道（[channel](./channel/)）

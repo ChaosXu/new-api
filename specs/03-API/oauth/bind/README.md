@@ -14,3 +14,4 @@
 | 解绑第三方账号.md | DELETE | /api/user/oauth/bindings/:provider_id | 当前用户解绑 |
 | 管理员查看用户绑定.md | GET | /api/user/:id/oauth/bindings | 管理员查看指定用户绑定 |
 | 管理员解绑用户账号.md | DELETE | /api/user/:id/oauth/bindings/:provider_id | 管理员解绑 |
+| 管理员清除用户绑定.md | DELETE | /api/user/:id/bindings/:binding_type | 管理员按内置绑定类型（email/github/discord/oidc/wechat/telegram/linuxdo）清除 |

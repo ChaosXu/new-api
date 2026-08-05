@@ -8,6 +8,9 @@
 | `/v1/models/:model` | GET | TokenAuth | 获取模型详情 | [获取模型详情.md](获取模型详情.md) |
 | `/v1beta/models` | GET | TokenAuth | Gemini 原生模型列表 | [Gemini模型列表.md](Gemini模型列表.md) |
 | `/v1beta/openai/models` | GET | TokenAuth | Gemini 兼容(OpenAI)模型列表 | [Gemini兼容模型列表.md](Gemini兼容模型列表.md) |
+| `/v1/models/:model` | DELETE | TokenAuth | **未实现**：固定返回 HTTP 501 | — |
+
+> `DELETE /v1/models/:model` 由 `RelayNotImplemented` 处理，固定返回 HTTP 501 与 OpenAI 错误体 `{error:{message:"API not implemented",type:"new_api_error",code:"api_not_implemented"}}`。
 
 ## 网关特殊行为
 - **不走统一响应信封**：返回上游/对应协议的原生格式。
