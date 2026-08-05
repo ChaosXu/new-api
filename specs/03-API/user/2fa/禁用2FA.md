@@ -1,0 +1,52 @@
+# 禁用 2FA
+
+> `POST /api/user/2fa/disable`
+
+- **鉴权**：`UserAuth`，附加 `DisableCache`
+- **用途**：用 TOTP 验证码或备用码禁用当前用户的 2FA，原子推进会话鉴权版本，返回新令牌。
+
+## 请求
+
+Body（JSON）：
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| code | string | 是 | 6 位 TOTP 验证码或一次性备用码 |
+| flow_token | string | 否 | 流程令牌（结构体保留，handler 未强制） |
+
+```json
+{ "code": "123456" }
+```
+
+## 响应
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| success | bool | `true` |
+| message | string | `两步验证已禁用` |
+| data.access_token | string | 新访问令牌（鉴权版本推进） |
+| data.token_type | string | `Bearer` |
+| data.access_expires_at | int64 | 过期时间（Unix 秒） |
+| data.session | object | 当前会话视图 |
+
+```json
+{
+  "success": true,
+  "message": "两步验证已禁用",
+  "data": {
+    "access_token": "eyJ...",
+    "token_type": "Bearer",
+    "access_expires_at": 1700000000,
+    "session": { "sid": "sess_abc", "current": true }
+  }
+}
+```
+
+## 错误码
+
+| 场景 | message |
+|---|---|
+| 参数错误 | `参数错误` |
+| 未启用 2FA | `用户未启用2FA` |
+| 验证码或备用码错误 | `验证码或备用码错误，请重试` |
+| 当前认证方式不支持安全验证 | 硬编码错误 |
