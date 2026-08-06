@@ -13,10 +13,11 @@ description: 从当前项目的所有代码中归纳组件。当用户提到"归
 | --- | --- | --- | --- |
 | `components.md` | 全局 | 组件清单表（每行一个组件：组件名、路径、一句话职责） | 见 `references/components.md` |
 | `{组件名}/overview.md` | 每组件 | 组件详情（技术栈 / 构建部署 / 制品形态 / 对外功能 / 边界与依赖） | 见 `references/overview.md` |
-| `{组件名}/relation.md` | 每组件 | 从该组件视角看它与其他组件的关系（关系图 + 交互表） | 见 `references/relation.md` |
+| `{组件名}/build.md` | 每组件·可选 | 该组件的**编译时**关系（其他组件的产物如何被嵌入本组件制品，或反之） | 见 `references/build.md` |
+| `{组件名}/relation/*.md` | 每组件·可选 | 该组件的**运行时**关系，按方向分类，一种关系一个文件（inbound/outbound × 内部/外部 + infrastructure） | 见 `references/relation.md` |
 | `{组件名}/deployment.md` | 每组件 | 从该组件视角看它在各部署形态中如何被打包/运行/连接 | 见 `references/deployment.md` |
 
-`overview.md`、`relation.md`、`deployment.md` 三者都以组件为中心，放在同一组件目录下，从不同侧面描述同一个组件。各产出物严格按对应模板（`assets/<name>.md`）填写。本 SKILL.md 只讲**组件识别**；每份产出物的具体数据源、步骤、模板与写入路径，按需读取对应 `references/<产出物名>.md`。
+所有产出都以组件为中心，放在同一组件目录下。`build.md` 与 `relation/*` 是**可选**的——某组件若无该类关系，不建空文件。各产出物严格按对应模板（`assets/<name>.md`）填写。本 SKILL.md 只讲**组件识别**；每份产出物的具体数据源、步骤、模板与写入路径，按需读取对应 `references/<产出物名>.md`。
 
 ## 关键概念
 
