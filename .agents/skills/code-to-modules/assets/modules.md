@@ -3,7 +3,7 @@
 <!--
 本模板由 code-to-modules skill 使用。
 填写规则：
-- 目标组件取自 specs/03-ARCH/components.md 的"组件名"列。
+- 目标组件取自 specs/03-ARCH/L2/components.md 的"组件名"列。
 - 内部模块：递归列出该组件源码树内的每一个叶子包/源码目录，不合并、不折叠。
 - 导入模块：列出第三方依赖（剔除指向本仓库内部的 replace/workspace），按职能分类。
 - 命名用仓库内的实际名称（目录名 / package 名 / 依赖坐标），不臆造。

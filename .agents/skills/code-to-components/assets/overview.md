@@ -1,7 +1,7 @@
 # <!-- 组件名 -->
 
 <!--
-本模板由 code-to-components skill 使用，每个组件一份，放置于 specs/03-ARCH/{组件名}/overview.md。
+本模板由 code-to-components skill 使用，每个组件一份，放置于 specs/03-ARCH/L2/{组件名}/overview.md。
 填写规则：
 - 文件标题为组件名（仓库内的实际名称：目录名 / module 名 / 制品名）。
 - 仅填写该组件的技术细节，不输出系统层、模块清单、分析过程、被排除项。
