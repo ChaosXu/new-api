@@ -8,6 +8,7 @@
 | --- | --- |
 | 内部模块 | 递归列出组件根下所有含 `*.go` 的目录；每个目录读取其 `package` 声明确定包名。 |
 | 导入模块 | `go.mod` 的 `require` 块；**剔除** `replace` 指向本仓库路径的条目（这些是内部子 module，归内部模块）。 |
+| 依赖关系 | 各 `*.go` 文件 import 块中**指向本 module 内其他包**的路径：以本 module 的 import path 为前缀的（如 `github.com/QuantumNous/new-api/relay/common`）；`replace` 指向仓库内子 module 的（如 `.../relaykit/...`）也算内部依赖。剔除标准库与第三方 `require`。 |
 
 ## 粒度规则
 

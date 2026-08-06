@@ -8,6 +8,7 @@
 | --- | --- |
 | 内部模块 | `src/` 下含 `*.ts` / `*.js` / `*.tsx` / `*.jsx` 的目录或模块文件。 |
 | 导入模块 | `package.json` 的 `dependencies` + `devDependencies`；**剔除** `workspaces` 指向本仓库内部的条目（这些归内部模块）。 |
+| 依赖关系 | 各源码文件 `import ... from '...'` 中**指向本组件内部**的路径：`@/` 别名（或 tsconfig paths 配置的内部别名）、以 `./` / `../` 开头的相对路径。剔除指向 `node_modules` 的第三方包名。 |
 
 ## 粒度规则
 

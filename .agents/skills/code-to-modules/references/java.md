@@ -8,6 +8,7 @@
 | --- | --- |
 | 内部模块 | `src/main/java/**/` 下的包目录。 |
 | 导入模块 | `pom.xml` 的 `<dependencies>`；`build.gradle` 的 `dependencies {}`。 |
+| 依赖关系 | 各 `*.java` 文件的 `import <fqcn>;` 中**指向本组件内部包**的：以本组件的 base package 为前缀的（如 `com.example.app.core.*`）。剔除外部坐标（`com.google.*`、`org.springframework.*` 等）。 |
 
 ## 粒度规则
 

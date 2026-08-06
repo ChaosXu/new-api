@@ -8,6 +8,7 @@
 | --- | --- |
 | 内部模块 | 含 `__init__.py` 的包目录，或含 `*.py` 的源码目录。 |
 | 导入模块 | `pyproject.toml` 的 `[project.dependencies]` / `requirements.txt` / `Pipfile`。 |
+| 依赖关系 | 各 `*.py` 文件的 `import <pkg>` / `from <pkg> import ...` 中**指向本组件内部**的包：以本组件根包名为前缀的相对/绝对导入（如 `from .sibling` / `from myapp.core`）。剔除标准库与 site-packages 第三方。 |
 
 ## 粒度规则
 
