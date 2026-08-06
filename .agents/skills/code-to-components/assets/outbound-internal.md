@@ -9,10 +9,10 @@
 
 ```mermaid
 graph LR
-  Me[<!-- 本组件 -->]
-  Other[<!-- 对方组件 -->]
+  Me[本组件]
+  Other[对方组件]
 
-  Me -- <!-- 方式 --> --> Other
+  Me -- 方式 --> Other
 ```
 
 | 对方组件 | 方式 | 说明 |
