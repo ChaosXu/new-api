@@ -1,30 +1,30 @@
 # Java 技术栈规则
 
-适用范围：组件根目录下存在 `pom.xml`（Maven）或 `build.gradle`（Gradle）。本文件被 SKILL.md 在识别到 Java 技术栈时按需读取，提供 Java 专属的**数据源**、**粒度规则**和**排除项补充**。通用概念（模块定义、内部/导入划分原则、通用排除项）见 SKILL.md。
+适用范围：组件根目录下存在 `pom.xml`（Maven）或 `build.gradle`（Gradle）。本文件提供 Java 专属的**代码理解切入点**。通用概念（逻辑模块定义、判定信号、粒度）见 SKILL.md。
 
-## 数据源
+## 核心原则
 
-| 类别 | 证据来源 |
+**Java package 是覆盖代码的粒度，不是模块粒度。** 一个逻辑模块可覆盖多个 package；多个内聚的 package 也可归为一个逻辑模块。不要"每 package = 一模块"。
+
+## 代码理解切入点
+
+| 标志 | 用法 |
 | --- | --- |
-| 内部模块 | `src/main/java/**/` 下的包目录。 |
-| 导入模块 | `pom.xml` 的 `<dependencies>`；`build.gradle` 的 `dependencies {}`。 |
-| 依赖关系 | 各 `*.java` 文件的 `import <fqcn>;` 中**指向本组件内部包**的：以本组件的 base package 为前缀的（如 `com.example.app.core.*`）。剔除外部坐标（`com.google.*`、`org.springframework.*` 等）。采集结果填入**每个模块文件**的"直接依赖（内部）"。 |
+| `interface` 声明 | 对外契约，一个 interface 常定义一个逻辑模块的边界 |
+| `implements` 同一 interface 的多个类 | 归为一个逻辑模块（如多个 Repository 都实现同一 DAO 接口 → "数据访问·仓储"一个模块），不各列 |
+| Spring `@Service`/`@Repository`/`@Controller` | 职责标注，辅助判断内聚 |
+| 调用链（import 关系） | 内聚性证据 |
 
-## 粒度规则
+## Java 特定的归类模式
 
-- 每个 `src/main/java/.../` 下的包目录一个内部模块，列到叶子粒度，不合并、不折叠。
+- **一个 interface + 多实现 = 一个模块**：实现同一 interface 的多个包归为一个逻辑模块。
+- **跨包内聚 = 合并**：分散在多包但共同实现一个能力的代码合并（如"鉴权"跨 security/web/auth 包）。
+- 同构实现不各列（反例见 SKILL.md）。
 
-## 排除项（Java 特定补充）
+## 覆盖代码标注
 
-除 SKILL.md 的通用排除项外，Java 还需排除：
+用 package 路径标注（相对组件根），例：`com.app.relay.adaptors.*`（多个适配器包通配）、`com.app.auth/`。
 
-- `target/`（Maven 构建产物）。
-- `build/`（Gradle 构建产物）。
-- 测试源码目录 `src/test/`（按通用"测试固件"排除项判定）。
+## 排除项
 
-## 同构折叠判定信号（Java 特定）
-
-满足以下信号**之一**的一批包判为同构，折叠到单文件汇总，不各自独立成文件：
-
-1. **实现同一 interface 的同类实现**：同一父包下的多个包都 `implements` 同一接口（如多个 Repository 都实现同一 DAO 接口，或多个 Service 实现同一 Service 接口）。判定信号 = 同父包 + 实现同一 interface + 职责描述只差领域对象名。
-2. **正向依赖集合高度重合**：一批包的内部 import 有 ≥80% 共同项。
+`target/`（Maven）、`build/`（Gradle）、测试源码 `src/test/`。

@@ -1,34 +1,51 @@
 # Node/Bun 技术栈规则
 
-适用范围：组件根目录下存在 `package.json`。本文件被 SKILL.md 在识别到 Node/Bun 技术栈时按需读取，提供 Node 专属的**数据源**、**粒度规则**和**排除项补充**。通用概念（模块定义、内部/导入划分原则、通用排除项）见 SKILL.md。
+适用范围：组件根目录下存在 `package.json`。本文件被 SKILL.md 在识别到 Node/Bun 技术栈时按需读取，提供 Node 专属的**代码理解切入点**。通用概念（逻辑模块定义、判定信号、粒度）见 SKILL.md。
 
-## 数据源
+## 核心原则
 
-| 类别 | 证据来源 |
-| --- | --- |
-| 内部模块 | `src/` 下含 `*.ts` / `*.js` / `*.tsx` / `*.jsx` 的目录或模块文件。 |
-| 导入模块 | `package.json` 的 `dependencies` + `devDependencies`；**剔除** `workspaces` 指向本仓库内部的条目（这些归内部模块）。 |
-| 依赖关系 | 各源码文件 `import ... from '...'` 中**指向本组件内部**的路径：`@/` 别名（或 tsconfig paths 配置的内部别名）、以 `./` / `../` 开头的相对路径。剔除指向 `node_modules` 的第三方包名。采集结果填入**每个模块文件**的"直接依赖（内部）"。 |
+**源码目录是覆盖代码的粒度，不是模块粒度。** 一个逻辑模块可覆盖多个目录；多个内聚的目录也可归为一个逻辑模块。不要"每目录 = 一模块"。
 
-## 粒度规则
+## 代码理解切入点
 
-- `src/` 下每个源码目录/模块文件按目录列，列到叶子粒度，不合并、不折叠。
-- `node_modules/` **不属于**内部模块（属第三方依赖目录）。
+提炼逻辑模块时，按这些标志判断职责与边界：
 
-## 排除项（Node 特定补充）
+| 标志 | 说明 | 用法 |
+| --- | --- | --- |
+| feature 目录（`src/features/<x>/`） | 一个业务功能域 | 通常一个 feature = 一个逻辑模块；但**相关的多个 feature 可聚合为一个更大的功能域**（如 channels + models + system-settings 聚合为"渠道与模型管理"域） |
+| `api.ts` / `types.ts` | feature 的对外契约 | api.ts 的请求函数、types.ts 的 zod schema 是该模块的契约 |
+| `index.tsx` + `components/` | feature 的 UI 实现 | 理解 feature 的页面结构 |
+| `routes/` | 路由定义 | 路由层整体是一个逻辑模块（"路由层"），不逐路由文件列 |
+| `lib/`、`hooks/` | 跨 feature 复用能力 | 多个工具函数内聚于"基础设施"，归为一个或少数几个模块 |
 
-除 SKILL.md 的通用排除项外，Node 还需排除：
+## Node 特定的归类模式
 
-- `node_modules/`（第三方依赖目录）。
-- 构建产物目录（`dist/` / `build/` / `out/`）。
-- 测试固件、配置目录（`__tests__/fixtures`、`.storybook` 等，按通用排除项判定）。
+### 多个相关 feature 聚合为一个功能域
 
-## 同构折叠判定信号（Node 特定）
+23 个 feature 不必各为顶层模块，按业务域聚合（中等粒度）：
+- **用户与权限**域：`features/users` + `features/profile` + `features/auth`
+- **渠道与模型**域：`features/channels` + `features/models`
+- **计费与钱包**域：`features/wallet` + `features/pricing` + `features/redemption-codes` + `features/subscriptions`
+- **监控与日志**域：`features/dashboard` + `features/usage-logs` + `features/performance-metrics`
+- **系统管理**域：`features/system-settings` + `features/system-info`
 
-满足以下信号**之一**的一批目录判为同构，折叠到单文件汇总，不各自独立成文件：
+聚合后每域下再按需拆 3-5 个逻辑模块（如"用户与权限"域拆：会话鉴权、用户管理、个人资料、OAuth 登录）。
 
-1. **同一 feature 下的同类型子目录**：如 `features/X/lib/`、`features/X/hooks/`、`features/X/components/` 这类只含零星工具函数/Hook/小组件的目录。判定信号 = 同父目录（同一 feature）+ 同类型（lib/hooks/components 之一）+ 导出符号数少（通常 ≤5 个文件）。
-2. **路由文件组**：`routes/_authenticated/<页面>/` 下的 `*.tsx` 路由文件，结构同构（都是 TanStack Router 路由定义）。
-3. **正向依赖集合高度重合**：一批目录的内部依赖（`@/` 引用）有 ≥80% 共同项。
+### 同类原子组件归为一个模块
 
-折叠文件形态：开头注明该 feature/分组下各子目录的共性职责与共性依赖，表列各子目录的差异。典型示例：web 的 `features/playground/lib/` 下 `input/message/options/parameters/state/storage/streaming` 子目录结构同构，折叠汇总。
+`components/ui/`（60+ shadcn 原子组件）、`components/ai-elements/`（42 个 AI 组件）各归为一个逻辑模块（"通用 UI 原子组件""AI 对话组件"），不逐组件列。
+
+### 复合组件有内部分层的拆子能力
+
+`components/layout/`（含 config/lib/components 三层）、`components/data-table/`（含 core/hooks/toolbar/layout/static 五层）各为一个逻辑模块，内部分层作为"子能力"描述，不拆成多个模块文件。
+
+## 覆盖代码的标注
+
+每个逻辑模块的"覆盖代码"列用目录路径标注（相对组件根），例：
+- `features/channels/`、`features/models/`（"渠道与模型管理"域覆盖）
+- `components/data-table/`（含 core/hooks/toolbar 等子目录整体）
+- `lib/`（工具库整体）
+
+## 排除项
+
+不计入任何模块的代码：`node_modules/`（第三方）、构建产物（`dist/`/`build/`/`out/`）、测试固件、配置目录（`.storybook` 等）。
