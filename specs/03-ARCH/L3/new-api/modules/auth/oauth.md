@@ -1,8 +1,18 @@
 # OAuth 登录
 
-- **职责**：第三方 OAuth 登录提供者的抽象与实现（GitHub、Discord、LinuxDo、OIDC、Generic 自定义等），处理 OAuth 授权码流程与用户绑定。
-- **覆盖代码**：`oauth/`（discord.go/github.go/generic.go 等）、`service/codex_oauth.go`（Codex 相关 OAuth）
-- **关键契约**：OAuth Provider 接口、各提供者实现、回调处理
+## 职责
+
+第三方 OAuth 登录提供者的抽象与实现（GitHub、Discord、LinuxDo、OIDC、Generic 自定义等），处理 OAuth 授权码流程与用户绑定。
+
+## 契约（开放能力）
+
+- **多提供者 OAuth 登录能力**：以统一 Provider 抽象对接各第三方 OAuth 授权码流程。
+- **OAuth 回调处理能力**：处理授权回调并换取用户信息。
+- **账号绑定能力**：把第三方身份与本地用户绑定/解绑。
+
+## 覆盖代码
+
+`oauth/`（discord.go/github.go/generic.go 等）、`service/codex_oauth.go`（Codex 相关 OAuth）
 
 ## 依赖（内部逻辑模块）
 

@@ -1,8 +1,18 @@
 # 渠道适配框架
 
-- **职责**：定义统一的渠道适配器接口（Adaptor/TaskAdaptor），并承载所有上游 AI 提供商的适配器实现。把不同提供商的协议差异收敛到统一接口后，供编排入口调用。
-- **覆盖代码**：`relay/channel/`（接口定义）、`relay/channel/*/`（39 个同步适配器：openai/claude/gemini/aws/ali 等）、`relay/channel/task/*/`（11 个异步任务适配器：kling/sora/vidu 等）、`relay/relay_adaptor.go`（按 APIType 分发到具体适配器）
-- **关键契约**：`Adaptor` 接口（15 方法，含 ConvertOpenAIRequest/DoResponse 等）、`TaskAdaptor` 接口（含 EstimateBilling 计费）
+## 职责
+
+定义统一的渠道适配器接口，并承载所有上游 AI 提供商的适配器实现。把不同提供商的协议差异收敛到统一接口后，供编排入口调用。
+
+## 契约（开放能力）
+
+- **统一的上游协议适配能力**：用单一 Adaptor 接口抽象任一提供商的请求转换/上游调用/响应处理（含 OpenAI 协议互转、流式响应处理等）。
+- **异步任务适配能力**：用 TaskAdaptor 接口抽象图像/视频/音频生成的提交/轮询/计费。
+- **按 API 类型分发到具体适配器的能力**：依据渠道的 APIType 选出对应适配器实例。
+
+## 覆盖代码
+
+`relay/channel/`（接口定义）、`relay/channel/*/`（39 个同步适配器：openai/claude/gemini/aws/ali 等）、`relay/channel/task/*/`（11 个异步任务适配器：kling/sora/vidu 等）、`relay/relay_adaptor.go`（按 APIType 分发到具体适配器）
 
 ## 内部子能力
 

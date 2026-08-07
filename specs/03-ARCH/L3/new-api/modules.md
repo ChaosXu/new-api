@@ -14,7 +14,7 @@
 | 异步任务（图像/视频/音频生成：Suno/Midjourney/Kling/Sora 等） | [flows/async-task.md](flows/async-task.md) |
 | 计费结算（预扣→差额结算→退还） | [flows/billing-settle.md](flows/billing-settle.md) |
 | 用户登录与鉴权（密码/OAuth/Passkey/2FA/账户绑定） | [flows/auth-login.md](flows/auth-login.md) |
-| 充值与支付（EPay/Stripe + webhook） | [flows/topup-payment.md](flows/topup-payment.md) |
+| 充值与支付（EPay/Stripe/Creem/Waffo/Waffo Pancake + webhook） | [flows/topup-payment.md](flows/topup-payment.md) |
 | 订阅（周期订阅，含配额重置） | [flows/subscription.md](flows/subscription.md) |
 | 兑换码兑换 | [flows/redemption.md](flows/redemption.md) |
 | 用户签到 | [flows/checkin.md](flows/checkin.md) |

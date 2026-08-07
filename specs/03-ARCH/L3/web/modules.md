@@ -1,178 +1,82 @@
 # web 模块索引
 
-> 全部模块的可点击索引。非同构模块详情（职责+正向依赖）在独立文件；同构折叠组见汇总文件。
+> 全部**逻辑模块**与**业务流程**的可点击索引。模块从代码职责提炼归类，不与源码目录 1:1 对应；流程描述一个请求/场景在模块间怎么流转。两者互补。
 
-## 1. 内部模块
+## 关键流程（模块间动态协作）
 
-### 同构折叠组
+**请求/交互驱动流程**（用户操作入口）：
 
-| 模块 | 职责 | 文件 |
-| --- | --- | --- |
-| 路由层 | 59 个 TanStack Router 路由文件（同构折叠） | [routes.md](routes.md) |
-| shadcn/ui 原子组件库 | 62 个原子组件（同构折叠） | [components-ui.md](components-ui.md) |
-| AI 对话组件 | 42 个 AI 对话呈现组件（同构折叠） | [components-ai-elements.md](components-ai-elements.md) |
-| 工具库 | 40 个项目级工具函数（同构折叠） | [lib.md](lib.md) |
-| 全局 Hook | 21 个复用 React Hook（同构折叠） | [hooks.md](hooks.md) |
-| 图标资源 | 品牌/自定义 SVG 图标（同构折叠） | [assets.md](assets.md) |
-| 通用业务组件 | 43 个顶层散组件（同构折叠） | [components-misc.md](components-misc.md) |
-
-### 应用入口 (`entry`)
-
-| 模块 | 职责 | 文件 |
-| --- | --- | --- |
-| env.d.ts | 环境变量类型声明（Vite） | [env-d.md](entry/env-d.md) |
-| main.tsx | React 应用引导：装配 RouterProvider、QueryClient、主题/字体/方向 Provider，初始化构建元数据与前端缓存 | [main.md](entry/main.md) |
-| routeTree.gen.ts | TanStack Router 自动生成的路由树聚合文件（勿手动编辑） | [routeTree-gen.md](entry/routeTree-gen.md) |
-| tanstack-table.d.ts | TanStack Table 全局类型补充声明 | [tanstack-table-d.md](entry/tanstack-table-d.md) |
-
-### 基础设施层 (`infra`)
-
-| 模块 | 职责 | 文件 |
-| --- | --- | --- |
-| config | 字体加载配置（fonts.ts） | [config.md](infra/config.md) |
-| context | React Context Provider：主题（theme-provider）、主题定制（theme-customization-provider）、字体（font-provider）、文字方向（direction-provider）、布局（layout-provider）、搜索（search-provider） | [context.md](infra/context.md) |
-| i18n | i18next 初始化、语言列表、静态键管理（config.ts/languages.ts/static-keys.ts） | [i18n.md](infra/i18n.md) |
-| stores | Zustand 全局 store：鉴权状态（auth-store）、通知状态（notification-store）、系统配置缓存（system-config-store） | [stores.md](infra/stores.md) |
-
-### 功能特性（feature 模块） (`features`)
-
-| 模块 | 职责 | 文件 |
-| --- | --- | --- |
-| features/about | 关于页面内容与 API/类型 | [about.md](features/about.md) |
-| features/auth | 认证总入口：auth-layout、API、类型、常量、统一导出 | [auth.md](features/auth.md) |
-| features/channels | 渠道总入口：API、类型、常量、统一导出 | [channels.md](features/channels.md) |
-| features/chat | 站内客服聊天（chat2link）Hook 与工具 | [chat.md](features/chat.md) |
-| features/dashboard | 数据仪表盘总入口（API/类型/常量/区块注册） | [dashboard.md](features/dashboard.md) |
-| features/errors | 通用错误状态页：403/404/500/未授权/维护中等 | [errors.md](features/errors.md) |
-| features/home | 公共首页内容入口（index/types/api/constants） | [home.md](features/home.md) |
-| features/keys | API 令牌管理总入口（API/类型/常量） | [keys.md](features/keys.md) |
-| features/legal | 隐私政策、用户协议等法律文档展示（legal-document 及具体文档组件），含 API 与类型 | [legal.md](features/legal.md) |
-| features/models | 可用模型管理总入口（API/类型/常量/区块注册） | [models.md](features/models.md) |
-| features/performance-metrics | 性能指标查询 API 与工具 | [performance-metrics.md](features/performance-metrics.md) |
-| features/playground | AI 对话调试场总入口（API/类型/常量） | [playground.md](features/playground.md) |
-| features/pricing | 定价展示总入口（API/类型/常量） | [pricing.md](features/pricing.md) |
-| features/profile | 个人中心总入口（API/类型/常量） | [profile.md](features/profile.md) |
-| features/rankings | 排行榜总入口（API/类型） | [rankings.md](features/rankings.md) |
-| features/redemption-codes | 兑换码管理总入口（API/类型/常量） | [redemption-codes.md](features/redemption-codes.md) |
-| features/setup | 首次部署初始化向导（API/类型） | [setup.md](features/setup.md) |
-| features/subscriptions | 订阅管理总入口（API/类型/常量） | [subscriptions.md](features/subscriptions.md) |
-| features/system-info | 系统运行信息展示 | [system-info.md](features/system-info.md) |
-| features/system-settings | 系统设置聚合：API、类型、统一入口 | [system-settings.md](features/system-settings.md) |
-| features/usage-logs | 日志查询总入口（API/类型/常量/区块注册） | [usage-logs.md](features/usage-logs.md) |
-| features/users | 管理员用户管理总入口（API/类型/常量） | [users.md](features/users.md) |
-| features/wallet | 用户钱包总入口（API/类型/常量） | [wallet.md](features/wallet.md) |
-
-### 复合业务组件 (`ui-composite`)
-
-| 模块 | 职责 | 文件 |
-| --- | --- | --- |
-| components/data-table/core | 数据表格内核：表格视图、行/列头、分页、列固定/尺寸、徽标单元格、行操作菜单、空态/骨架、类型定义 | [data-table-core.md](ui-composite/data-table-core.md) |
-| components/data-table/hooks | 数据表格 Hook：表格状态管理、视图模式、列筛选防抖 | [data-table-hooks.md](ui-composite/data-table-hooks.md) |
-| components/data-table/index.ts | （待补充） | [data-table-index.md](ui-composite/data-table-index.md) |
-| components/data-table/layout | 卡片网格/移动端卡片列表/分页页面等表格布局形态 | [data-table-layout.md](ui-composite/data-table-layout.md) |
-| components/data-table/static | 静态（非分页服务端）数据表格实现与行操作 | [data-table-static.md](ui-composite/data-table-static.md) |
-| components/data-table/toolbar | 工具栏：批量操作、分面筛选、视图模式切换、视图选项 | [data-table-toolbar.md](ui-composite/data-table-toolbar.md) |
-| components/layout/components | 布局细分子组件：app-header/app-sidebar/navbar/footer/logo/nav-group 等 | [layout-components.md](ui-composite/layout-components.md) |
-| components/layout/config | 顶部导航与系统设置布局配置 | [layout-config.md](ui-composite/layout-config.md) |
-| components/layout/constants.ts | （待补充） | [layout-constants.md](ui-composite/layout-constants.md) |
-| components/layout/index.ts | （待补充） | [layout-index.md](ui-composite/layout-index.md) |
-| components/layout/lib | 侧边栏视图注册表与 URL 工具 | [layout-lib.md](ui-composite/layout-lib.md) |
-| components/layout/types.ts | （待补充） | [layout-types.md](ui-composite/layout-types.md) |
-
-
-### 核心框架
-
-| 依赖 | 用途 |
+| 场景 | 流程文档 |
 | --- | --- |
-| `react` / `react-dom` | React 19 渲染运行时与 DOM 适配 |
-| `@tanstack/react-router` | 文件式路由系统，驱动 `routes/` 下的页面与路由组 |
-| `@tanstack/react-query` | 服务端状态/数据请求缓存（`features/*/api.ts` 的查询与变更） |
-| `@tanstack/react-table` | `components/data-table/` 的表格内核 |
-| `@tanstack/react-virtual` | 长列表虚拟滚动 |
-| `zustand` | `stores/` 全局状态管理（鉴权、通知、系统配置） |
+| 用户在钱包页充值，经试算、确认、多支付网关分发完成支付 | [flows/topup-payment.md](flows/topup-payment.md) |
+| 查看渠道密钥等敏感操作触发 2FA/Passkey 二次验证获取 proof_token | [flows/secure-verification.md](flows/secure-verification.md) |
+| Playground 发送消息，SSE 流式接收并增量渲染 LLM 响应 | [flows/playground-streaming.md](flows/playground-streaming.md) |
 
-### 构建工具链（devDependencies）
+**启动驱动流程**（应用入口，非用户操作）：
 
-| 依赖 | 用途 |
+| 场景 | 流程文档 |
 | --- | --- |
-| `@rsbuild/core` | Rsbuild 构建/开发服务器 |
-| `@rsbuild/plugin-react` | Rsbuild 的 React 支持 |
-| `@rsbuild/plugin-tailwindcss` | Rsbuild 的 Tailwind CSS 集成 |
-| `@tanstack/router-plugin` | Rsbuild 下的 TanStack Router 文件式路由插件（生成 routeTree） |
-| `@tanstack/react-query-devtools` / `@tanstack/react-router-devtools` | 开发态调试面板 |
-| `@typescript/native-preview`（tsgo） | TypeScript 类型检查（`bun run typecheck`） |
-| `oxlint` / `oxfmt` | 代码 lint 与格式化 |
-| `knip` | 未使用代码/依赖检测 |
-| `shadcn` | shadcn/ui 组件脚手架（`components/ui/`） |
-| `happy-dom` | 测试用 DOM 环境 |
-| `@types/{node,react,react-dom}` | 类型声明 |
+| 前端从 main.tsx 挂载到首屏就绪，含 setup 检查与认证引导 | [flows/app-startup.md](flows/app-startup.md) |
+| 系统未初始化时强制重定向到 4 步部署向导完成首次初始化 | [flows/setup-wizard.md](flows/setup-wizard.md) |
 
-### UI 基础组件与样式
+## 1. 内部模块（逻辑模块）
 
-| 依赖 | 用途 |
-| --- | --- |
-| `@base-ui/react` | `components/ui/` 组件底层原语（Base UI） |
-| `tailwindcss` / `tailwind-merge` / `tw-animate-css` | Tailwind 工具类与合并、动画工具 |
-| `class-variance-authority` / `clsx` | 组件变体与条件类名 |
-| `lucide-react` / `react-icons` / `@hugeicons/react` / `@hugeicons/core-free-icons` / `@lobehub/icons` | 图标库 |
-| `@fontsource-variable/{lora,public-sans}` | 内嵌字体资源 |
-| `next-themes` | 主题（深/浅色）切换驱动 |
-| `motion` | 动画（Framer Motion） |
-| `cmdk` | 命令面板 |
-| `vaul` | 抽屉（Drawer）组件 |
-| `input-otp` | OTP 输入组件（认证 OTP 流程） |
-| `embla-carousel-react` | 轮播组件 |
-| `react-resizable-panels` | 可调大小面板 |
-| `react-day-picker` / `dayjs` | 日期选择与日期处理 |
-| `@xyflow/react` | 工作流/流程图节点编辑（ai-elements 画布与节点/边） |
+### 应用框架 (`framework`)
 
-### AI / Markdown / 富文本渲染
+| 模块 | 职责 | 覆盖代码 | 文件 |
+| --- | --- | --- | --- |
+| 应用引导 | React 应用根引导：装配 Provider 链、初始化 QueryClient/Router、预加载系统品牌 | `main.tsx`、`routeTree.gen.ts`、`config/` | [app-bootstrap.md](modules/framework/app-bootstrap.md) |
+| 路由层与权限守卫 | TanStack Router 文件路由骨架、布局路由外壳、登录与角色守卫、遗留路由重定向、错误边界 | `routes/`、`lib/nav-modules.ts`、`lib/legacy-route.ts` | [routing-guard.md](modules/framework/routing-guard.md) |
+| 主题与偏好 Provider | 跨组件树注入主题/主题定制/字体/方向/侧边栏布局/命令面板偏好，Cookie 持久化驱动 CSS 变量 | `context/`、`lib/theme-*.ts`、`lib/motion.ts` | [theme-prefs.md](modules/framework/theme-prefs.md) |
 
-| 依赖 | 用途 |
-| --- | --- |
-| `ai` | AI SDK（Playground 流式对话） |
-| `marked` | Markdown 解析 |
-| `shiki` | 代码语法高亮 |
-| `katex` | 数学公式渲染 |
-| `dompurify` | HTML 净化（Markdown 渲染防 XSS） |
-| `stream-markdown-parser` | 流式 Markdown 解析 |
-| `@codemirror/{state,view,language,lang-markdown}` / `@lezer/highlight` / `yace` | 代码编辑器（JSON 编辑器、Markdown 编辑） |
-| `auto-skeleton-react` | 骨架屏加载占位 |
-| `use-stick-to-bottom` | 聊天消息自动滚动到底 |
-| `tokenlens` | Token 计数 |
+### 基础设施 (`infra`)
 
-### 数据可视化
+| 模块 | 职责 | 覆盖代码 | 文件 |
+| --- | --- | --- | --- |
+| HTTP 与认证会话底座 | axios 实例（认证拦截/自动刷新/去重/错误处理）、认证 bundle 解析、跨标签页会话同步 | `lib/http-client.ts`、`lib/api.ts`、`lib/auth-session*.ts`、`lib/handle-server-error.ts`、`lib/secure-verification.ts` | [http-auth-base.md](modules/infra/http-auth-base.md) |
+| 全局状态与系统配置缓存 | Zustand 管理认证态/通知已读/系统配置缓存，区分内存与持久化，提供非 React 同步选择器 | `stores/auth-store.ts`、`stores/notification-store.ts`、`stores/system-config-store.ts` | [global-state.md](modules/infra/global-state.md) |
+| 通用工具库 | 格式化/剪贴板/权限角色/第三方认证编解码/Cookie-DOM-缓存/可视化辅助等纯函数底座 | `lib/format.ts`、`lib/currency.ts`、`lib/roles.ts`、`lib/oauth.ts`、`lib/passkey.ts`、`lib/utils.ts` 等 | [utils.md](modules/infra/utils.md) |
+| 全局复用 Hook | 跨页面复用 hooks：系统配置拉取、通知联动、侧边栏导航、权限判定、表格状态、UI 交互、防抖/倒计时、响应式 | `hooks/` | [hooks.md](modules/infra/hooks.md) |
+| 国际化基础 | i18next 初始化、7 语言清单与编码映射、静态翻译键登记 | `i18n/config.ts`、`i18n/languages.ts`、`i18n/static-keys.ts`、`i18n/locales/` | [i18n.md](modules/infra/i18n.md) |
 
-| 依赖 | 用途 |
-| --- | --- |
-| `@visactor/react-vchart` / `@visactor/vchart` | 仪表盘与统计图表（VChart） |
-| `recharts` | 部分图表 |
+### 认证与会话 (`auth`)
 
-### 表单与校验
+| 模块 | 职责 | 覆盖代码 | 文件 |
+| --- | --- | --- | --- |
+| 登录与注册 | 密码登录/注册、2FA OTP、密码找回、邀请码、Turnstile、登出与会话恢复 | `features/auth/sign-in/`、`sign-up/`、`forgot-password/`、`otp/`、`reset-password-confirm/` | [sign-in-up.md](modules/auth/sign-in-up.md) |
+| OAuth 与 Passkey 免密登录 | 第三方 OAuth 登录（GitHub/Discord/OIDC/Telegram/WeChat/自定义）、Passkey WebAuthn 登录/管理、账号绑定 | `features/auth/components/`、`features/auth/passkey/`、`features/auth/lib/`、`lib/oauth.ts`、`lib/passkey.ts` | [oauth-passkey.md](modules/auth/oauth-passkey.md) |
+| 敏感操作二次验证 | 2FA/Passkey 作为 Security Proof 的作用域驱动二次验证，统一对话框，proof_token 透传 | `features/auth/secure-verification/`、`lib/secure-verification.ts` | [secure-verification.md](modules/auth/secure-verification.md) |
+| 个人中心与自助 | 用户自助资料/安全/会话/签到/侧栏管理，以及 API Key 自助管理 | `features/profile/`、`features/keys/` | [profile-self.md](modules/auth/profile-self.md) |
 
-| 依赖 | 用途 |
-| --- | --- |
-| `react-hook-form` / `@hookform/resolvers` | 表单状态与提交管理 |
-| `zod` | Schema 校验（表单与 API 数据） |
+### 计费与支付 (`billing`)
 
-### 网络、状态与工具
+| 模块 | 职责 | 覆盖代码 | 文件 |
+| --- | --- | --- | --- |
+| 钱包与支付 | 钱包主页、充值配置/试算、多支付网关在线支付、兑换码兑换、推广返佣、账单历史 | `features/wallet/` | [wallet-payment.md](modules/billing/wallet-payment.md) |
+| 订阅套餐管理 | 订阅套餐全生命周期（管理员 CRUD/用户管理，用户查询/计费偏好/多通道支付），合规门控 | `features/subscriptions/` | [subscriptions.md](modules/billing/subscriptions.md) |
+| 兑换码管理 | 管理员兑换码（一次性预付面值卡）批量生成/编辑/启停/删除/清理 | `features/redemption-codes/` | [redemption-codes.md](modules/billing/redemption-codes.md) |
+| 定价广场 | 公开模型广场：模型价格/能力/分组倍率展示，多维筛选，表格/卡片双视图 | `features/pricing/` | [pricing.md](modules/billing/pricing.md) |
 
-| 依赖 | 用途 |
-| --- | --- |
-| `axios` | HTTP 客户端（`lib/http-client.ts`、`lib/api.ts`） |
-| `sse.js` | SSE 流式响应处理（Playground/聊天） |
-| `nanoid` | 唯一 ID 生成 |
-| `react-top-loading-bar` | 顶部加载进度条 |
-| `qrcode.react` | 二维码渲染（OAuth/Passkey 绑定等） |
+### 渠道与系统管理 (`admin-channels`)
 
-### 国际化
+| 模块 | 职责 | 覆盖代码 | 文件 |
+| --- | --- | --- | --- |
+| 渠道管理 | 50+ 上游供应商渠道全生命周期：CRUD/测试/批量运维/密钥/模型映射（最复杂功能） | `features/channels/` | [channels.md](modules/admin-channels/channels.md) |
+| 模型目录管理 | 模型目录元数据（model_name/vendor/匹配规则）、上游同步、缺失检测、io.net GPU 部署 | `features/models/` | [models.md](modules/admin-channels/models.md) |
+| 用户管理 | 管理员用户账户管理：CRUD/角色状态/配额/Passkey-2FA 重置/OAuth 绑定/权限目录 | `features/users/` | [users.md](modules/admin-channels/users.md) |
+| 监控与日志 | 数据仪表盘（概览/模型/流量/用户）、用量日志（调用/绘图/任务）、性能指标查询 | `features/dashboard/`、`features/usage-logs/`、`features/performance-metrics/` | [dashboard-logs.md](modules/admin-channels/dashboard-logs.md) |
+| 系统设置 | 7 子类别（站点/认证/计费/模型路由/安全/内容/运维）服务端配置，嵌套 drill-in 侧边栏 | `features/system-settings/`、`components/layout/config/system-settings.config.ts` | [system-settings.md](modules/admin-channels/system-settings.md) |
+| 区块注册框架 | 通用 createSectionRegistry 工厂，驱动仪表盘/日志/系统设置多分区页面 | `features/system-settings/utils/section-registry.ts` | [section-registry.md](modules/admin-channels/section-registry.md) |
+| AI 对话调试场 | 登录用户 AI 对话测试场：分组/模型选择、推理参数、SSE 流式 chat completions | `features/playground/` | [playground.md](modules/admin-channels/playground.md) |
+| 系统信息与首次部署 | Root 系统运行信息（实例/任务）、未初始化时 4 步部署向导 | `features/system-info/`、`features/setup/` | [system-info-runtime.md](modules/admin-channels/system-info-runtime.md) |
+| 公共内容与错误页 | 公共首页/关于/法律/排行榜、站内客服聊天（链接型）、401-503 错误页 | `features/home/`、`about/`、`legal/`、`rankings/`、`chat/`、`errors/` | [public-content.md](modules/admin-channels/public-content.md) |
 
-| 依赖 | 用途 |
-| --- | --- |
-| `i18next` / `react-i18next` / `i18next-browser-languagedetector` | 多语言（`i18n/`，支持 en/zh/zh-TW/fr/ja/ru/vi） |
+### UI 组件库 (`ui`)
 
-### 提示与交互
-
-| 依赖 | 用途 |
-| --- | --- |
-| `sonner` | Toast 通知 |
+| 模块 | 职责 | 覆盖代码 | 文件 |
+| --- | --- | --- | --- |
+| 通用 UI 原子组件 | Radix + Tailwind 原子组件库（约 62 个），设计系统统一基座，无业务逻辑 | `components/ui/` | [ui-primitives.md](modules/ui/ui-primitives.md) |
+| AI 对话呈现组件 | ai-elements 风格对话 UI 原语：响应渲染引擎、推理链、工具调用、画布/工作流 | `components/ai-elements/` | [ai-elements.md](modules/ui/ai-elements.md) |
+| 布局框架 | 应用级布局（侧边栏/顶栏/内容/页脚）+ 嵌套 drill-in 侧边栏视图，五层分层 | `components/layout/` | [layout-framework.md](modules/ui/layout-framework.md) |
+| 数据表格复合组件 | TanStack Table 企业级表格方案，表格/卡片双视图，五层分层（core/hooks/toolbar/layout/static） | `components/data-table/` | [data-table.md](modules/ui/data-table.md) |
+| 业务复用组件 | 非原子业务组件：JSON/富文本编辑、选择器、反馈对话框、交互工具、展示、主题语言切换、品牌资源、全局样式 | `components/`（根目录散组件）、`assets/`、`styles/` | [business-components.md](modules/ui/business-components.md) |

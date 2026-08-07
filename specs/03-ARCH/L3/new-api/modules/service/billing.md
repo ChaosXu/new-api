@@ -1,8 +1,19 @@
 # 计费结算
 
-- **职责**：用户请求的配额预扣费、实际用量结算、差额退还、违规扣费等完整计费链路。支持按比例计费与分层表达式计费两种模式，贯穿中继与异步任务两类请求。
-- **覆盖代码**：`service/billing.go`、`service/billing_session.go`、`service/billing_usage.go`、`service/quota.go`、`service/text_quota.go`、`service/tiered_settle.go`、`service/violation_fee.go`、`service/task_billing.go`、`common/quota.go`、`common/quota_math.go`、`service/log_info_generate.go`（含配额饱和审计）
-- **关键契约**：`BillingSettler`（relay/common，计费会话）、`common.QuotaFromFloat`/`QuotaRound`/`QuotaFromDecimal`（配额换算，防溢出）
+## 职责
+
+用户请求的配额预扣费、实际用量结算、差额退还、违规扣费等完整计费链路。支持按比例计费与分层表达式计费两种模式，贯穿中继与异步任务两类请求。
+
+## 契约（开放能力）
+
+- **配额预扣与结算退还能力**：提供请求前预扣、请求后按实际用量结算差额、退还/补扣、违规扣费的完整计费会话操作。
+- **防溢出配额换算能力**：以饱和取整（int32 上限、防负扣费）方式在浮点/十进制配额与整数列间换算。
+- **分层表达式计费能力**：配合计费表达式引擎执行按表达式定价的结算。
+- **计费饱和审计能力**：捕获饱和事件并审计到日志的 admin_info.quota_saturation。
+
+## 覆盖代码
+
+`service/billing.go`、`service/billing_session.go`、`service/billing_usage.go`、`service/quota.go`、`service/text_quota.go`、`service/tiered_settle.go`、`service/violation_fee.go`、`service/task_billing.go`、`common/quota.go`、`common/quota_math.go`、`service/log_info_generate.go`（含配额饱和审计）
 
 ## 内部子能力
 

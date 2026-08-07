@@ -1,8 +1,18 @@
 # 令牌计数与用量
 
-- **职责**：对请求/响应的文本、图像、音频进行 token 计数与用量估算，作为计费与日志的依据。含本地分词器与上游用量解析。
-- **覆盖代码**：`service/token_counter.go`、`service/token_estimator.go`、`service/tokenizer.go`、`service/usage_helpr.go`、`service/text_quota.go`（文本配额）、`service/image.go`（图像计费因子）、`service/audio.go`（音频时长解析计费）
-- **关键契约**：token 计数函数、用量估算接口、`MaxImageN`（图像数量上界，计费乘数校验）
+## 职责
+
+对请求/响应的文本、图像、音频进行 token 计数与用量估算，作为计费与日志的依据。含本地分词器与上游用量解析。
+
+## 契约（开放能力）
+
+- **文本 token 计数能力**：用本地分词器或上游用量解析对文本请求/响应计数。
+- **多模态用量估算能力**：估算图像/音频的用量与计费因子。
+- **计费乘数有界校验能力**：对用户可控的计费乘数（图像数量等）强制上界校验。
+
+## 覆盖代码
+
+`service/token_counter.go`、`service/token_estimator.go`、`service/tokenizer.go`、`service/usage_helpr.go`、`service/text_quota.go`（文本配额）、`service/image.go`（图像计费因子）、`service/audio.go`（音频时长解析计费）
 
 ## 依赖（内部逻辑模块）
 

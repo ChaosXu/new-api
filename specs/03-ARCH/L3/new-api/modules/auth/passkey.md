@@ -1,8 +1,18 @@
 # Passkey 与无密码认证
 
-- **职责**：基于 WebAuthn 的 Passkey 无密码认证，处理注册/登录会话与凭据管理；含 TOTP 两步验证。
-- **覆盖代码**：`service/passkey/`（WebAuthn 实例构建、注册/登录会话）
-- **关键契约**：WebAuthn 实例工厂、Passkey 注册/登录会话、凭据存储
+## 职责
+
+基于 WebAuthn 的 Passkey 无密码认证，处理注册/登录会话与凭据管理；含 TOTP 两步验证。
+
+## 契约（开放能力）
+
+- **Passkey 注册与登录会话能力**：发起并完成 WebAuthn 注册/登录的两阶段会话。
+- **凭据管理能力**：增删查用户 Passkey 凭据。
+- **TOTP 两步验证能力**：基于 TOTP 的二次验证与备份码。
+
+## 覆盖代码
+
+`service/passkey/`（WebAuthn 实例构建、注册/登录会话）
 
 ## 依赖（内部逻辑模块）
 

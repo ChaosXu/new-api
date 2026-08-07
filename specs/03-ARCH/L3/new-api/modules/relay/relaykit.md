@@ -1,8 +1,18 @@
 # 协议转换
 
-- **职责**：在各中继协议（OpenAI Chat/Claude Messages/Gemini/OpenAI Responses/Rerank）之间互转请求与响应的独立框架。作为纯库子 module 存在，宿主通过注册表按 RelayFormat 查找转换器。
-- **覆盖代码**：`relaykit/`（独立 go.mod 的子 module）、`relaykit/types/`（RelayFormat 等类型）、`relaykit/dto/`（各协议 DTO）、`relaykit/relayconvert/`（转换框架 + internal/ 下各协议转换器：claude_messages/gemini_chat/oai_chat/oai_responses）、`relaykit/reasonmap/`（停止原因映射）
-- **关键契约**：`RelayFormat` 类型（openai/claude/gemini/responses/rerank）、`Meta` interface（转换上下文契约）、request/response/text-converter 注册表
+## 职责
+
+在各中继协议（OpenAI Chat/Claude Messages/Gemini/OpenAI Responses/Rerank）之间互转请求与响应的独立框架。作为纯库子 module 存在，宿主通过注册表按 RelayFormat 查找转换器。
+
+## 契约（开放能力）
+
+- **跨中继协议互转能力**：在 openai/claude/gemini/responses/rerank 五种 RelayFormat 之间转换请求与响应。
+- **按格式查找转换器的能力**：通过注册表按 RelayFormat 选取对应请求/响应/文本转换器。
+- **转换上下文契约能力**：以 Meta 接口向转换器提供渠道/模型/计费等上下文。
+
+## 覆盖代码
+
+`relaykit/`（独立 go.mod 的子 module）、`relaykit/types/`（RelayFormat 等类型）、`relaykit/dto/`（各协议 DTO）、`relaykit/relayconvert/`（转换框架 + internal/ 下各协议转换器：claude_messages/gemini_chat/oai_chat/oai_responses）、`relaykit/reasonmap/`（停止原因映射）
 
 ## 内部子能力
 
