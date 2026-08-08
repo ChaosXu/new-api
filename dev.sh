@@ -45,29 +45,6 @@ port_in_use() {
   lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1
 }
 
-# 确保 web/dist/index.html 存在（//go:embed 编译需要）。
-# 若已有真实构建产物则保持不动；否则写入最小占位。
-ensure_web_dist_placeholder() {
-  local target="$REPO_ROOT/web/dist/index.html"
-  if [[ -f "$target" ]]; then
-    return 0
-  fi
-  log "web/dist/index.html 不存在，创建最小占位以满足 //go:embed 编译"
-  mkdir -p "$REPO_ROOT/web/dist"
-  cat >"$target" <<'HTML'
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>new-api (placeholder)</title>
-  </head>
-  <body>
-    <p>Backend dev placeholder. Run the frontend with: ./dev.sh frontend</p>
-  </body>
-</html>
-HTML
-}
-
 # 确保 SQLite 数据库目录存在
 ensure_sqlite_dir() {
   local db_dir
@@ -95,10 +72,9 @@ start_backend() {
     lsof -nP -iTCP:"$PORT" -sTCP:LISTEN >&2 || true
     exit 1
   fi
-  ensure_web_dist_placeholder
   ensure_sqlite_dir
 
-  log "启动后端 (go run main.go)"
+  log "启动后端 (go run ./cmd/new-api)"
   log "  PORT=$PORT  GIN_MODE=$GIN_MODE  DEBUG=$DEBUG"
   log "  SQLITE_PATH=$SQLITE_PATH"
   log "  健康检查: curl http://localhost:$PORT/api/status"
@@ -107,7 +83,9 @@ start_backend() {
 
   # 前台运行；main.go 会自动 godotenv.Load(".env")，
   # 这里已 export 的同名变量优先级更高，确保调试模式生效。
-  exec go run main.go
+  # go -C ./server 让 go 工具在 server/ 下找 go.mod；进程 CWD 仍在仓库根，
+  # 所以 .env 从仓库根读取，保持原有行为。
+  exec go -C ./server run ./cmd/new-api
 }
 
 # 启动前端（前台）
@@ -147,13 +125,12 @@ start_all() {
     err "端口 $FRONTEND_PORT 已被占用"; lsof -nP -iTCP:"$FRONTEND_PORT" -sTCP:LISTEN >&2 || true; exit 1
   fi
 
-  ensure_web_dist_placeholder
   ensure_sqlite_dir
 
   # 后端：后台运行，日志带前缀
   log "后台启动后端 → http://localhost:$PORT (GIN_MODE=$GIN_MODE, DEBUG=$DEBUG, SQLITE=$SQLITE_PATH)"
   # 启动一个带前缀的日志管道，便于在混合输出中区分
-  ( exec go run main.go 2>&1 | sed -u 's/^/[api] /' ) &
+  ( exec go -C ./server run ./cmd/new-api 2>&1 | sed -u 's/^/[api] /' ) &
   BACKEND_PID="$!"
 
   # 清理：退出时 kill 后端进程组
@@ -214,7 +191,6 @@ show_status() {
 
   echo ""
   log "文件状态："
-  [[ -f "$REPO_ROOT/web/dist/index.html" ]] && echo "  web/dist/index.html  存在" || echo "  web/dist/index.html  缺失（首次启动后端会自动创建占位）"
   [[ -f "$REPO_ROOT/.env" ]] && echo "  .env  存在（main.go 会自动加载）" || echo "  .env  不存在（使用脚本默认值）"
 }
 

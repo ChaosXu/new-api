@@ -1,12 +1,28 @@
 .github
 .git
-*.md
 .vscode
-.gitignore
-Makefile
-docs
 .eslintcache
 .gocache
-/web/node_modules
-/web/dist
+.gitignore
+.gitattributes
+.DS_Store
+
+# Docs, specs and marketing material are not needed in the image.
+docs
+wiki
+specs
+*.md
 !THIRD-PARTY-LICENSES.md
+
+# Frontend is deployed separately; the backend image is API-only.
+web
+electron
+
+# Runtime data and logs.
+data
+logs
+
+# Local editor/agent config.
+.agents
+.zcode
+CLAUDE.md

@@ -3,9 +3,9 @@ package minimax
 import (
 	"fmt"
 
-	channelconstant "github.com/QuantumNous/new-api/constant"
-	relaycommon "github.com/QuantumNous/new-api/relay/common"
-	"github.com/QuantumNous/new-api/relay/constant"
+	channelconstant "github.com/QuantumNous/new-api/internal/constant"
+	relaycommon "github.com/QuantumNous/new-api/internal/relay/common"
+	"github.com/QuantumNous/new-api/internal/relay/constant"
 	"github.com/QuantumNous/new-api/relaykit/types"
 )
 

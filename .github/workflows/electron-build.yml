@@ -53,15 +53,17 @@ jobs:
 
       # - name: Build Go binary (macos/Linux)
       #   if: runner.os != 'Windows'
+      #   working-directory: server
       #   run: |
       #     go mod download
-      #     go build -ldflags "-s -w -X 'new-api/common.Version=$(git describe --tags)' -extldflags '-static'" -o new-api
+      #     go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/internal/common.Version=$(git describe --tags)' -extldflags '-static'" -o ../new-api ./cmd/new-api/
 
       - name: Build Go binary (Windows)
         if: runner.os == 'Windows'
+        working-directory: server
         run: |
           go mod download
-          go build -ldflags "-s -w -X 'new-api/common.Version=$(git describe --tags)'" -o new-api.exe
+          go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/internal/common.Version=$(git describe --tags)'" -o ../new-api.exe ./cmd/new-api/
 
       - name: Update Electron version
         run: |

@@ -1,5 +1,5 @@
 WEB_DIR = ./web
-API_DIR = .
+API_DIR = ./server
 DEV_WEB_PORT ?= 5173
 DEV_COMPOSE_FILE = docker-compose.dev.yml
 DEV_POSTGRES_SERVICE = postgres
@@ -19,31 +19,18 @@ build-web:
 
 build-all-web: build-web
 
-# Build the Go backend binary (new-api). Depends on build-web because main.go
-# embeds web/dist via //go:embed. Build flags mirror the Dockerfile.
-build-api: build-web
+# Build the Go backend binary (new-api). The backend is a pure API server and
+# no longer embeds the frontend, so this does not depend on build-web.
+# Build flags mirror the Dockerfile. VERSION stays at the repo root.
+build-api:
 	@echo "Building api binary..."
 	@cd $(API_DIR) && \
 		CGO_ENABLED=0 GOWORK=off GOEXPERIMENT=greenteagc \
-		go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/common.Version=$$(cat VERSION)'" -o new-api
-
-# Build only the Go backend binary, skipping the frontend build.
-# Writes a minimal web/dist/index.html placeholder so //go:embed compiles;
-# an existing real build is left untouched.
-build-api-only:
-	@echo "Ensuring web/dist placeholder for //go:embed..."
-	@if [ ! -f $(WEB_DIR)/dist/index.html ]; then \
-		mkdir -p $(WEB_DIR)/dist; \
-		printf '%s\n' '<!doctype html><html><head><meta charset="UTF-8"><title>placeholder</title></head><body>backend-only build</body></html>' > $(WEB_DIR)/dist/index.html; \
-	fi
-	@echo "Building api binary (backend only)..."
-	@cd $(API_DIR) && \
-		CGO_ENABLED=0 GOWORK=off GOEXPERIMENT=greenteagc \
-		go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/common.Version=$$(cat VERSION)'" -o new-api
+		go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/internal/common.Version=$$(cat ../VERSION)'" -o ../new-api ./cmd/new-api/
 
 start-api:
 	@echo "Starting api dev server..."
-	@cd $(API_DIR) && go run main.go &
+	@cd $(API_DIR) && go run ./cmd/new-api &
 
 dev-api:
 	@echo "Starting api services (docker)..."
@@ -61,14 +48,14 @@ dev-web:
 
 dev: dev-api dev-web
 
-# The main package embeds the ignored web/dist output and is covered after build-web.
+# The main package is covered by build-api; tests run across all non-main packages.
 test:
 	@echo "Testing root Go module..."
-	@root_module=$$(GOWORK=off go list -m); \
+	@cd $(API_DIR) && root_module=$$(GOWORK=off go list -m); \
 		root_packages=$$(GOWORK=off go list -e ./... | grep -vxF "$$root_module"); \
 		GOWORK=off go test $$root_packages
 	@echo "Testing relaykit Go module..."
-	@cd relaykit && GOWORK=off go test ./...
+	@cd $(API_DIR)/relaykit && GOWORK=off go test ./...
 
 reset-setup:
 	@echo "Resetting local setup wizard state..."
