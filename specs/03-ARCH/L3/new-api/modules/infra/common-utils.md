@@ -13,7 +13,7 @@
 
 ## 覆盖代码
 
-`common/`（绝大部分文件）、`common/limiter/`（分布式限流器）、`logger/`（全局日志）、`i18n/`（go-i18n 多语言）
+`common/`（Redis 客户端、邮件、加密、配额换算 `quota_math.go`、SSRF 防护、系统监控 `system_monitor*.go`、磁盘缓存 `disk_cache*.go`、性能配置 `performance_config.go`、节点身份 `node_identity.go`、goroutine 池 `gopool.go`、Pyroscope `pyro.go`、pprof `pprof.go`、topup 倍率 `topup-ratio.go`、渠道端点默认值 `endpoint_defaults.go`/`endpoint_type.go`、SSE 事件 `custom-event.go`、JSON 包装 `json.go`、环境变量、速率限制器等）、`common/limiter/`（分布式限流器）、`logger/`（全局日志）、`i18n/`（go-i18n 多语言）
 
 ## 依赖（内部逻辑模块）
 

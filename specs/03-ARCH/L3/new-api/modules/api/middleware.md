@@ -20,7 +20,7 @@ Gin 请求处理链的通用中间件层（不含会话鉴权，鉴权归"鉴权
 
 ## 覆盖代码
 
-`middleware/`（除 `auth.go`/`auth_origin.go` 外的中间件文件：cors.go、gzip.go、cache.go、audit.go、distributor.go、turnstile.go、rate_limit.go、recover.go 等）。
+`middleware/`（除 `auth.go`/`auth_origin.go` 外的中间件文件：`cors.go`、`gzip.go`、`cache.go`、`disable-cache.go`、`audit.go`、`distributor.go`、`turnstile-check.go`、`rate-limit.go`、`recover.go`、`request-id.go`、`request_body_limit.go`、`body_cleanup.go`、`i18n.go`、`header_nav.go`、`performance.go`、`secure_verification.go`、`email-verification-rate-limit.go`、`model-rate-limit.go`、`jimeng_adapter.go`、`kling_adapter.go`、`logger.go`、`stats.go`、`trusted_proxies.go`、`utils.go`）。
 
 > 注：会话鉴权中间件（auth.go/auth_origin.go）归入"鉴权"域的"会话与令牌鉴权"模块。
 

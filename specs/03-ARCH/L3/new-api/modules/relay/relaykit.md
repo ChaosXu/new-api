@@ -12,7 +12,9 @@
 
 ## 覆盖代码
 
-`relaykit/`（独立 go.mod 的子 module）、`relaykit/types/`（RelayFormat 等类型）、`relaykit/dto/`（各协议 DTO）、`relaykit/relayconvert/`（转换框架 + internal/ 下各协议转换器：claude_messages/gemini_chat/oai_chat/oai_responses）、`relaykit/reasonmap/`（停止原因映射）
+`relaykit/`（独立 go.mod 的子 module）、`relaykit/types/`（RelayFormat 等类型）、`relaykit/dto/`（各协议 DTO）、`relaykit/relayconvert/`（转换框架 + internal/ 下各协议转换器：claude_messages/gemini_chat/oai_chat/oai_responses）、`relaykit/reasonmap/`（停止原因映射）、`service/convert.go`（OpenAI↔Claude/Gemini 响应互转的 service 侧薄封装）、`service/request_converter.go`（`ConvertRequest` 注册 gin 上下文的媒体解析器后委托 relayconvert）、`service/openai_chat_responses_compat.go`（ChatCompletions↔Responses 请求/响应互转的 service 侧薄封装）
+
+> 注：上述三个 `service/*.go` 是根模块调用 relaykit 的桥接封装（relaykit 不得反向依赖根模块，故桥接代码在 service 侧）。协议转换的本体逻辑在 `relaykit/relayconvert/`，这些 service 文件仅转发调用并补充 gin 上下文/媒体解析。
 
 ## 内部子能力
 

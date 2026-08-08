@@ -6,6 +6,14 @@
 
 **源码目录是覆盖代码的粒度，不是模块粒度。** 一个逻辑模块可覆盖多个目录；多个内聚的目录也可归为一个逻辑模块。不要"每目录 = 一模块"。
 
+## 完整性程序（强制，配合 SKILL.md 第 3/12 步）
+
+"通读理解"不能替代枚举。按以下程序确保每个源码目录都被考虑：
+
+1. **枚举所有源码目录**：列出 `src/`（或根）下所有含 `index.{ts,tsx,js}` 的目录；用 `find src -name "index.*" -type f` 辅助。
+2. **枚举 workspace**：解析 `package.json.workspaces`（monorepo），枚举每个 workspace 目录。
+3. **每个结果必须在「源码覆盖矩阵」占一行**（covered / new-module / dont-list），不得遗漏。`dont-list` 须填一句理由（如"仅类型定义""配置目录"）。
+
 ## 代码理解切入点
 
 提炼逻辑模块时，按这些标志判断职责与边界：
@@ -16,11 +24,13 @@
 | `api.ts` / `types.ts` | feature 的对外契约 | api.ts 的请求函数、types.ts 的 zod schema 是该模块的契约 |
 | `index.tsx` + `components/` | feature 的 UI 实现 | 理解 feature 的页面结构 |
 | `routes/` | 路由定义 | 路由层整体是一个逻辑模块（"路由层"），不逐路由文件列 |
-| `lib/`、`hooks/` | 跨 feature 复用能力 | 多个工具函数内聚于"基础设施"，归为一个或少数几个模块 |
+| `lib/`、`hooks/` | 跨 feature 复用能力 | **每个有独立开放能力与独立依赖图的基础设施组件各为一个逻辑模块**（缓存、限流、HTTP 客户端、校验各列），禁止全部塞进单个"基础设施"模块 |
 
 ## Node 特定的归类模式
 
-### 多个相关 feature 聚合为一个功能域
+### 多个相关 feature 聚合为一个功能域（仅示例，不要照抄）
+
+> 以下是某项目的具体聚合示例，**仅作参考，不要照搬**。聚合应基于实际代码的内聚性，而非套用固定的 feature 分组。
 
 23 个 feature 不必各为顶层模块，按业务域聚合（中等粒度）：
 - **用户与权限**域：`features/users` + `features/profile` + `features/auth`

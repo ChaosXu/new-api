@@ -6,6 +6,14 @@
 
 **Java package 是覆盖代码的粒度，不是模块粒度。** 一个逻辑模块可覆盖多个 package；多个内聚的 package 也可归为一个逻辑模块。不要"每 package = 一模块"。
 
+## 完整性程序（强制，配合 SKILL.md 第 3/12 步）
+
+"通读理解"不能替代枚举。按以下程序确保每个 package 都被考虑：
+
+1. **枚举所有 package**：`find src/main -type d`（Maven 布局）或 `find src -type d`（Gradle），列出 `src/main/java/...` 下所有 package 目录。
+2. **多 module 项目**：解析 `pom.xml` 的 `<modules>` 或 `settings.gradle` 的 `include`，枚举每个子 module。
+3. **每个结果必须在「源码覆盖矩阵」占一行**（covered / new-module / dont-list），不得遗漏。
+
 ## 代码理解切入点
 
 | 标志 | 用法 |

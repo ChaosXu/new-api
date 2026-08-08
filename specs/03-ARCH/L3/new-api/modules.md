@@ -21,12 +21,15 @@
 | 上游模型/倍率同步 | [flows/upstream-sync.md](flows/upstream-sync.md) |
 | io.net 部署管理 | [flows/ionet-deployment.md](flows/ionet-deployment.md) |
 | 渠道管理（测试/自动禁用/自动启用） | [flows/channel-manage.md](flows/channel-manage.md) |
+| 异步任务产物视频代理（按状态门控 + 按渠道解析上游 URL） | [flows/video-proxy.md](flows/video-proxy.md) |
+| 配额数据聚合与仪表盘查询（内存累积→落库→查询） | [flows/quota-dashboard.md](flows/quota-dashboard.md) |
 
 **后台自动流程**（main.go 启动，无 HTTP 入口）：
 
 | 场景 | 流程文档 |
 | --- | --- |
 | 后台自动维护任务（系统任务调度器、凭证刷新、配额聚合、auth 清理等） | [flows/background-tasks.md](flows/background-tasks.md) |
+| Codex 渠道凭证自动刷新（OAuth 令牌生命周期，仅主节点） | [flows/codex-credential-refresh.md](flows/codex-credential-refresh.md) |
 
 ## 1. 内部模块（逻辑模块）
 
@@ -48,7 +51,9 @@
 | 渠道选择 | 按优先级/权重/分组/亲和性选渠道，渠道可用性管理 | service/channel.go、service/channel_select.go、service/channel_affinity.go、service/group.go | [channel-select.md](modules/service/channel-select.md) |
 | 令牌计数与用量 | 文本/图像/音频的 token 计数与用量估算 | service/token_*.go、service/usage_helpr.go、service/text_quota.go、service/image.go、service/audio.go | [token-usage.md](modules/service/token-usage.md) |
 | 任务轮询与异步处理 | 异步任务的提交/轮询/状态推进/结算 | service/task.go、service/task_polling.go、service/midjourney.go、service/subscription_reset_task.go、service/system_task.go、service/webhook.go | [task-polling.md](modules/service/task-polling.md) |
-| HTTP 客户端与文件处理 | HTTP 客户端/文件解码/敏感词/支付/Codex 等杂项业务 | service/http*.go、service/download.go、service/file_*.go、service/sensitive.go、service/epay.go、service/waffo_pancake.go、service/codex_*.go 等 | [http-file-misc.md](modules/service/http-file-misc.md) |
+| HTTP 客户端与文件处理 | HTTP 客户端/文件解码/敏感词/支付/排行榜快照/节点上报 | service/http*.go、service/download.go、service/file_*.go、service/sensitive.go、service/epay.go、service/waffo_pancake.go、service/funding_source.go、service/rankings.go、service/system_instance.go | [http-file-misc.md](modules/service/http-file-misc.md) |
+| Codex 集成 | Codex 渠道 OAuth 凭证生命周期 + Codex 后端 API（模型/用量/限额） | service/codex_*.go、controller/codex_usage.go | [codex-integration.md](modules/service/codex-integration.md) |
+| 用户通知 | 多通道（邮件/webhook/Bark/Gotify）出站通知 + 限流 | service/user_notify.go、service/notify-limit.go、service/webhook.go | [user-notify.md](modules/service/user-notify.md) |
 
 ### HTTP 接口 (`api`)
 
@@ -169,3 +174,45 @@
 | github.com/tiktoken-go/tokenizer | tiktoken 分词（OpenAI 系列本地 token 计数） |
 | github.com/samber/lo | 泛型工具集 |
 | github.com/nicksnyder/go-i18n/v2 | go-i18n 多语言翻译 |
+
+## 附录：源码覆盖矩阵
+
+> 由 `find <根> -type d`（排除 vendor/node_modules/dist/build/out/web/electron/.git 等）枚举，证明每个源码目录都被考虑过，无静默跳过。`dont-list` = 仅类型/配置/产物/独立组件，不单列。relay/channel/* 与 relay/channel/task/* 各适配器目录同属"渠道适配框架"一个模块（同类实现合并）。
+
+| 目录 | 判定 | 所属模块 / 排除理由 |
+| --- | --- | --- |
+| `relay/`（根包编排文件） | covered | 编排入口 |
+| `relay/constant/` | covered | 编排入口 |
+| `relay/common_handler/` | covered | 编排入口 |
+| `relay/relay_adaptor.go` | covered | 渠道适配框架 |
+| `relay/channel/` + `relay/channel/*`（39 同步适配器，含 codex/） | covered | 渠道适配框架（同类实现合并） |
+| `relay/channel/task/` + `relay/channel/task/*`（11 任务适配器） | covered | 渠道适配框架（同类实现合并） |
+| `relay/common/` | covered | 中继上下文 |
+| `relay/helper/` | covered | 中继辅助 |
+| `relaykit/`（含 types/dto/reasonmap/relayconvert 及 internal 子包） | covered | 协议转换 |
+| `controller/`（含 codex_usage.go） | covered | 控制器 |
+| `middleware/`（除 auth.go/auth_origin.go） | covered | 中间件 |
+| `middleware/auth.go`、`middleware/auth_origin.go` | covered | 会话与令牌鉴权 |
+| `service/`（billing/quota/channel/task/token/http 等业务文件） | covered | 计费结算/渠道选择/任务轮询/令牌计数/HTTP 客户端等 |
+| `service/convert.go`、`request_converter.go`、`openai_chat_responses_compat.go` | covered | 协议转换（service 侧桥接封装） |
+| `service/openai_chat_responses_mode.go` | covered | 编排入口（Chat→Responses 升级策略） |
+| `service/codex_*.go` | covered | Codex 集成 |
+| `service/user_notify.go`、`notify-limit.go`、`webhook.go` | covered | 用户通知 |
+| `service/authz/` | covered | 权限授权（RBAC） |
+| `service/passkey/` | covered | Passkey 与无密码认证 |
+| `service/auth_session.go`、`auth_token.go`、`auth_cleanup.go` | covered | 会话与令牌鉴权 |
+| `model/`（含 usedata*.go、usedata_rankings.go） | covered | 实体数据访问 |
+| `oauth/` | covered | OAuth 登录 |
+| `setting/`（含全部 *_setting/、config/、reasoning/） | covered | 运行时配置 |
+| `common/`（含 limiter/、limiter/lua/、custom-event.go、quota_math.go 等） | covered | 通用工具 |
+| `logger/` | covered | 通用工具 |
+| `i18n/`（含 locales/） | covered | 通用工具 |
+| `constant/` | covered | 常量与基础类型 |
+| `types/` | covered | 常量与基础类型 |
+| `dto/` | covered | 常量与基础类型 |
+| `pkg/billingexpr/` | covered | 计费表达式引擎 |
+| `pkg/cachex/`、`pkg/perf_metrics/`、`pkg/ionet/` | covered | 多级缓存与可观测与 io.net |
+| `router/` | dont-list | 仅路由装配，非业务模块；流程入口由 flows/ 覆盖 |
+| `bin/` | dont-list | 迁移 SQL + 测试脚本，运维资源非源码模块 |
+| `electron/` | dont-list | 独立组件 new-api-electron，非本组件范围 |
+| `wiki/` | dont-list | 文档目录，非源码 |

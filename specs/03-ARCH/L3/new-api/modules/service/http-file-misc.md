@@ -2,7 +2,7 @@
 
 ## 职责
 
-跨业务复用的 HTTP 客户端（含代理/传输策略/SSRF 防护）、文件下载与解码（图像/音频/视频格式探测）、敏感词过滤、支付封装（EPay 回调地址解析、Waffo Pancake SDK 客户端/会话/webhook 校验）、Codex 凭证与 OAuth 等杂项业务能力。
+跨业务复用的 HTTP 客户端（含代理/传输策略/SSRF 防护）、文件下载与解码（图像/音频/视频格式探测）、敏感词过滤、支付封装（EPay 回调地址解析、Waffo Pancake SDK 客户端/会话/webhook 校验）、排行榜快照聚合、节点实例上报等杂项业务能力。
 
 ## 契约（开放能力）
 
@@ -10,12 +10,14 @@
 - **文件下载与解码能力**：下载并探测图像/音频/视频格式。
 - **敏感词过滤能力**：多模式匹配敏感词。
 - **支付封装能力**：EPay 回调地址解析、Waffo Pancake 会话创建与 webhook 校验。
+- **排行榜快照能力**：聚合 `quota_data` 表生成模型/厂商排行榜快照（5 分钟内存缓存）。
+- **节点实例上报能力**：后台定时上报本节点身份与运行信息（仅主节点）。
 
 ## 覆盖代码
 
-`service/http.go`、`service/http_client.go`、`service/http_transport_policy.go`、`service/http_transport_sharded.go`、`service/protected_fetch_client.go`、`service/download.go`、`service/file_decoder.go`、`service/file_service.go`、`service/sensitive.go`、`service/epay.go`、`service/waffo_pancake.go`、`service/funding_source.go`、`service/codex_*.go`、`service/rankings.go`、`service/system_instance.go`、`service/notify-limit.go`、`service/user_notify.go`
+`service/http.go`、`service/http_client.go`、`service/http_transport_policy.go`、`service/http_transport_sharded.go`、`service/protected_fetch_client.go`、`service/download.go`、`service/file_decoder.go`、`service/file_service.go`、`service/sensitive.go`、`service/epay.go`、`service/waffo_pancake.go`、`service/funding_source.go`、`service/rankings.go`（排行榜快照聚合）、`service/system_instance.go`（节点实例后台上报）
 
-> 注：五个支付网关（EPay/Stripe/Creem/Waffo/Waffo Pancake）的下单 handler、webhook 回调与配额入账在控制器层（`controller/topup_*.go`），归"控制器"模块；本模块仅承载 service 层的支付封装/客户端能力。
+> 注：五个支付网关（EPay/Stripe/Creem/Waffo/Waffo Pancake）的下单 handler、webhook 回调与配额入账在控制器层（`controller/topup_*.go`），归"控制器"模块；本模块仅承载 service 层的支付封装/客户端能力。Codex 凭证/模型/用量与用户通知已拆为独立模块（见 [codex-integration.md](codex-integration.md)、[user-notify.md](user-notify.md)）。
 
 ## 依赖（内部逻辑模块）
 

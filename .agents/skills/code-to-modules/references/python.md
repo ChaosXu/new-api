@@ -6,6 +6,14 @@
 
 **Python 包/模块文件是覆盖代码的粒度，不是模块粒度。** 一个逻辑模块可覆盖多个包；多个内聚的包也可归为一个逻辑模块。不要"每包/每文件 = 一模块"。
 
+## 完整性程序（强制，配合 SKILL.md 第 3/12 步）
+
+"通读理解"不能替代枚举。按以下程序确保每个包都被考虑：
+
+1. **枚举所有包**：`find . -name "__init__.py" -not -path "*/.venv/*" -not -path "*/venv/*"`（列出所有 Python 包目录）。
+2. **解析入口/模块**：检查 `pyproject.toml` 的 `[tool.poetry.scripts]` 或 `[project.scripts]` 枚举 CLI 入口。
+3. **每个结果必须在「源码覆盖矩阵」占一行**（covered / new-module / dont-list），不得遗漏。
+
 ## 代码理解切入点
 
 | 标志 | 用法 |
