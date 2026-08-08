@@ -8,7 +8,7 @@ DEV_POSTGRES_DB = new-api
 DEV_POSTGRES_USER = root
 DEV_SQLITE_PATH ?= one-api.db
 
-.PHONY: all build-web build-all-web start-api dev dev-api dev-api-rebuild dev-web reset-setup test
+.PHONY: all build-web build-all-web build-api build-api-only start-api dev dev-api dev-api-rebuild dev-web reset-setup test
 
 all: build-all-web start-api
 
@@ -18,6 +18,28 @@ build-web:
 	@cd $(WEB_DIR) && DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$$(cat ../VERSION) bun run build
 
 build-all-web: build-web
+
+# Build the Go backend binary (new-api). Depends on build-web because main.go
+# embeds web/dist via //go:embed. Build flags mirror the Dockerfile.
+build-api: build-web
+	@echo "Building api binary..."
+	@cd $(API_DIR) && \
+		CGO_ENABLED=0 GOWORK=off GOEXPERIMENT=greenteagc \
+		go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/common.Version=$$(cat VERSION)'" -o new-api
+
+# Build only the Go backend binary, skipping the frontend build.
+# Writes a minimal web/dist/index.html placeholder so //go:embed compiles;
+# an existing real build is left untouched.
+build-api-only:
+	@echo "Ensuring web/dist placeholder for //go:embed..."
+	@if [ ! -f $(WEB_DIR)/dist/index.html ]; then \
+		mkdir -p $(WEB_DIR)/dist; \
+		printf '%s\n' '<!doctype html><html><head><meta charset="UTF-8"><title>placeholder</title></head><body>backend-only build</body></html>' > $(WEB_DIR)/dist/index.html; \
+	fi
+	@echo "Building api binary (backend only)..."
+	@cd $(API_DIR) && \
+		CGO_ENABLED=0 GOWORK=off GOEXPERIMENT=greenteagc \
+		go build -ldflags "-s -w -X 'github.com/QuantumNous/new-api/common.Version=$$(cat VERSION)'" -o new-api
 
 start-api:
 	@echo "Starting api dev server..."
