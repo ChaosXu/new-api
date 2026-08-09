@@ -13,7 +13,7 @@
 
 ## 覆盖代码
 
-`relay/helper/`（valid_request.go 请求校验、计费/定价函数、流式扫描等）、`common/custom-event.go`（`CustomEvent` SSE 渲染器，relay 流式响应通过 `c.Render(-1, CustomEvent{...})` 写 SSE 事件）
+`server/internal/relay/helper/`（valid_request.go 请求校验、计费/定价函数、流式扫描等）、`server/internal/common/custom-event.go`（`CustomEvent` SSE 渲染器，relay 流式响应通过 `c.Render(-1, CustomEvent{...})` 写 SSE 事件）
 
 ## 依赖（内部逻辑模块）
 

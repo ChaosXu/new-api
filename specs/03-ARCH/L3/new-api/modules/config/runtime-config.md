@@ -12,10 +12,10 @@
 
 ## 覆盖代码
 
-`setting/`（注册入口）、`setting/config/`（ConfigManager）、`setting/billing_setting/`、`setting/model_setting/`、`setting/operation_setting/`、`setting/ratio_setting/`、`setting/console_setting/`、`setting/system_setting/`、`setting/performance_setting/`、`setting/perf_metrics_setting/`、`setting/reasoning/`
+`server/internal/setting/`（注册入口）、`server/internal/setting/config/`（ConfigManager）、`server/internal/setting/billing_setting/`、`server/internal/setting/model_setting/`、`server/internal/setting/operation_setting/`、`server/internal/setting/ratio_setting/`、`server/internal/setting/console_setting/`、`server/internal/setting/system_setting/`、`server/internal/setting/performance_setting/`、`server/internal/setting/perf_metrics_setting/`、`server/internal/setting/reasoning/`
 
 ## 依赖（内部逻辑模块）
 
 - 通用工具（Redis 持久化）
 - 数据访问（设置存储）
-- 协议转换（reasoning 设置再导出 relaykit 的 reasoning 工具）
+- 协议转换（reasoning 设置再导出 server/relaykit 的 reasoning 工具）

@@ -12,10 +12,10 @@ sequenceDiagram
     participant Ctrl as 控制器<br/>(relayHandler)
     participant Orch as 编排入口<br/>(relay.TextHelper)
     participant Adapt as 渠道适配框架<br/>(Adaptor)
-    participant Convert as 协议转换<br/>(relaykit)
-    participant Select as 渠道选择<br/>(service)
-    participant Bill as 计费结算<br/>(service/BillingSettler)
-    participant Data as 数据访问<br/>(model)
+    participant Convert as 协议转换<br/>(server/relaykit)
+    participant Select as 渠道选择<br/>(server/internal/service)
+    participant Bill as 计费结算<br/>(server/internal/service/BillingSettler)
+    participant Data as 数据访问<br/>(server/internal/model)
     participant Upstream as 上游 AI
 
     Client->>MW: POST /v1/chat/completions (API Key)
@@ -43,8 +43,8 @@ sequenceDiagram
 ## 流程说明
 
 1. **请求到达 + 鉴权分发**（中间件）：请求先经 `会话鉴权`（解析 API Key → 用户/令牌/分组）、`限流` 校验；`distributor` 中间件按分组/优先级**选择渠道**并**预扣配额**（防止超用），把渠道与预扣信息注入 `RelayInfo`。
-2. **控制器分发**（控制器）：`controller/relay.go` 的 `relayHandler` 按 `info.RelayMode`（Chat/Images/Audio/Embeddings/Rerank/Responses）分发到对应 Helper（chat 走 `relay.TextHelper`）。
-3. **编排入口**（编排入口）：`relay.TextHelper`（`relay/compatible_handler.go`）串联后续：模型映射、StreamOptions 处理、`GetAdaptor(apiType)` 选适配器、`adaptor.Init`。
+2. **控制器分发**（控制器）：`server/internal/controller/relay.go` 的 `relayHandler` 按 `info.RelayMode`（Chat/Images/Audio/Embeddings/Rerank/Responses）分发到对应 Helper（chat 走 `relay.TextHelper`）。
+3. **编排入口**（编排入口）：`relay.TextHelper`（`server/internal/relay/compatible_handler.go`）串联后续：模型映射、StreamOptions 处理、`GetAdaptor(apiType)` 选适配器、`adaptor.Init`。
 4. **协议转换**（协议转换 + 渠道适配框架）：`adaptor.ConvertOpenAIRequest` 把 OpenAI 协议请求转成上游协议（如上游是 Claude/Gemini，经 relaykit 互转）。若是 passthrough 模式则跳过转换直接透传 body。
 5. **上游调用**（渠道适配框架）：`adaptor.DoRequest` 发起对上游 AI 的 HTTP 调用。
 6. **响应处理与令牌计数**（渠道适配框架）：`adaptor.DoResponse` 解析上游响应，**统计 usage tokens**（prompt/completion）。流式响应边收边向客户端转发，非流式等完整响应。
@@ -69,7 +69,7 @@ sequenceDiagram
 
 以上流程以 chat（`relay.TextHelper`）为例。其他同步中继模式的链路**完全同构**，差异仅两处：
 
-1. **控制器分发**：`controller/relay.go:relayHandler` 按 `info.RelayMode` 分发到对应 Helper——
+1. **控制器分发**：`server/internal/controller/relay.go:relayHandler` 按 `info.RelayMode` 分发到对应 Helper——
    - `RelayModeEmbeddings` → `relay.EmbeddingHelper`
    - `RelayModeImagesGenerations`/`ImagesEdits` → `relay.ImageHelper`
    - `RelayModeAudioSpeech`/`Translation`/`Transcription` → `relay.AudioHelper`

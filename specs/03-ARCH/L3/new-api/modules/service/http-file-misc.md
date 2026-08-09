@@ -15,9 +15,9 @@
 
 ## 覆盖代码
 
-`service/http.go`、`service/http_client.go`、`service/http_transport_policy.go`、`service/http_transport_sharded.go`、`service/protected_fetch_client.go`、`service/download.go`、`service/file_decoder.go`、`service/file_service.go`、`service/sensitive.go`、`service/epay.go`、`service/waffo_pancake.go`、`service/funding_source.go`、`service/rankings.go`（排行榜快照聚合）、`service/system_instance.go`（节点实例后台上报）
+`server/internal/service/http.go`、`server/internal/service/http_client.go`、`server/internal/service/http_transport_policy.go`、`server/internal/service/http_transport_sharded.go`、`server/internal/service/protected_fetch_client.go`、`server/internal/service/download.go`、`server/internal/service/file_decoder.go`、`server/internal/service/file_service.go`、`server/internal/service/sensitive.go`、`server/internal/service/epay.go`、`server/internal/service/waffo_pancake.go`、`server/internal/service/funding_source.go`、`server/internal/service/rankings.go`（排行榜快照聚合）、`server/internal/service/system_instance.go`（节点实例后台上报）
 
-> 注：五个支付网关（EPay/Stripe/Creem/Waffo/Waffo Pancake）的下单 handler、webhook 回调与配额入账在控制器层（`controller/topup_*.go`），归"控制器"模块；本模块仅承载 service 层的支付封装/客户端能力。Codex 凭证/模型/用量与用户通知已拆为独立模块（见 [codex-integration.md](codex-integration.md)、[user-notify.md](user-notify.md)）。
+> 注：五个支付网关（EPay/Stripe/Creem/Waffo/Waffo Pancake）的下单 handler、webhook 回调与配额入账在控制器层（`server/internal/controller/topup_*.go`），归"控制器"模块；本模块仅承载 service 层的支付封装/客户端能力。Codex 凭证/模型/用量与用户通知已拆为独立模块（见 [codex-integration.md](codex-integration.md)、[user-notify.md](user-notify.md)）。
 
 ## 依赖（内部逻辑模块）
 

@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`pkg/billingexpr/`（compile.go/round.go 等）、设计文档 `pkg/billingexpr/expr.md`
+`server/pkg/billingexpr/`（compile.go/round.go 等）、设计文档 `server/pkg/billingexpr/expr.md`
 
 ## 依赖（内部逻辑模块）
 
@@ -20,4 +20,4 @@
 
 ## 项目约束
 
-- 改动前**必须先读 `pkg/billingexpr/expr.md`**（设计哲学、表达式语言、架构、token 归一化、配额换算、版本化）。
+- 改动前**必须先读 `server/pkg/billingexpr/expr.md`**（设计哲学、表达式语言、架构、token 归一化、配额换算、版本化）。

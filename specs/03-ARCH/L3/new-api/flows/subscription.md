@@ -31,7 +31,7 @@ sequenceDiagram
 
     Note over U,Data: 阶段二：周期内使用（订阅配额参与计费，见计费结算流程）
 
-    Note over U,Data: 阶段三：周期到期重置（后台自动，main.go 启动）
+    Note over U,Data: 阶段三：周期到期重置（后台自动，server/cmd/new-api/main.go 启动）
     loop 定时（StartSubscriptionQuotaResetTask）
         ResetTask->>Data: ExpireDueSubscriptions(到期订阅批量过期)
         ResetTask->>Data: ResetDueSubscriptions(重置：发新周期配额)
@@ -47,13 +47,13 @@ sequenceDiagram
 
 ## 流程说明
 
-**阶段一：购买订阅**（`controller/subscription.go`）
+**阶段一：购买订阅**（`server/internal/controller/subscription.go`）
 1. 用户选计划 + 支付方式。余额支付直接扣余额开通；网关支付（EPay/Stripe/Creem/Waffo）经支付集成下单 → webhook 回调开通（`SubscriptionEpayNotify`/`CreemWebhook` 等）。
 2. 创建用户订阅记录（计划、周期、配额、到期时间），发放首期配额。
 
 **阶段二：周期内使用** — 订阅配额参与计费结算流程（见 billing-settle.md）。
 
-**阶段三：周期到期重置**（`service/subscription_reset_task.go`，main.go 启动）
+**阶段三：周期到期重置**（`server/internal/service/subscription_reset_task.go`，由 `server/cmd/new-api/main.go` 启动）
 3. `StartSubscriptionQuotaResetTask` 定时（CAS 锁防并发）执行 `runSubscriptionQuotaResetOnce`：
    - `ExpireDueSubscriptions`：到期订阅批量置为过期（分批 batchSize）。
    - `ResetDueSubscriptions`：重置——按计划周期发新配额、推下个到期时间。

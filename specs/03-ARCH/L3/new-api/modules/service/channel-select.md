@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`service/channel.go`、`service/channel_select.go`、`service/channel_affinity.go`、`service/group.go`
+`server/internal/service/channel.go`、`server/internal/service/channel_select.go`、`server/internal/service/channel_affinity.go`、`server/internal/service/group.go`
 
 ## 依赖（内部逻辑模块）
 

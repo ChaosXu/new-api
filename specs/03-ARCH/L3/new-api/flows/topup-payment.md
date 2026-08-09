@@ -17,7 +17,7 @@ sequenceDiagram
     Note over Ctrl: CriticalRateLimit 限流<br/>getPayMoney 按用户分组计价
     Ctrl->>Ctrl: 创建 TopUp 订单(待支付 TopUpStatusPending)
     alt EPay
-        Ctrl->>GW: 构造易支付下单请求(service/epay.go 签名)
+        Ctrl->>GW: 构造易支付下单请求(server/internal/service/epay.go 签名)
     else Stripe
         Ctrl->>GW: 创建 Checkout Session(genStripeLink)
     else Creem
@@ -48,12 +48,12 @@ sequenceDiagram
 
 ## 流程说明
 
-1. **发起充值**（`controller/topup_*.go`，路由 `POST /api/user/top_up/{gateway}/pay`，经 `CriticalRateLimit` 限流）：用户选金额，`getPayMoney` 按用户分组计价后创建 TopUp 订单（`TopUpStatusPending`），按所选网关调用对应下单逻辑生成支付链接并跳转。
-   - **EPay**：`RequestEpay`（topup.go）→ `service/epay.go` 构造易支付下单请求（签名）。
+1. **发起充值**（`server/internal/controller/topup_*.go`，路由 `POST /api/user/top_up/{gateway}/pay`，经 `CriticalRateLimit` 限流）：用户选金额，`getPayMoney` 按用户分组计价后创建 TopUp 订单（`TopUpStatusPending`），按所选网关调用对应下单逻辑生成支付链接并跳转。
+   - **EPay**：`RequestEpay`（topup.go）→ `server/internal/service/epay.go` 构造易支付下单请求（签名）。
    - **Stripe**：`RequestStripePay`/`RequestStripeAmount`（topup_stripe.go）→ `genStripeLink` 创建 Checkout Session。
    - **Creem**：`RequestCreemPay`（topup_creem.go）→ `genCreemLink` 创建 Checkout（HMAC-SHA256 签名）。
    - **Waffo**：`RequestWaffoPay`/`RequestWaffoAmount`（topup_waffo.go）→ `waffo-go` SDK 下单。
-   - **Waffo Pancake**：`RequestWaffoPancakePay`/`RequestWaffoPancakeAmount`（topup_waffo_pancake.go）→ `waffo-pancake-sdk-go` 创建会话（`service/waffo_pancake.go` 封装）。
+   - **Waffo Pancake**：`RequestWaffoPancakePay`/`RequestWaffoPancakeAmount`（topup_waffo_pancake.go）→ `waffo-pancake-sdk-go` 创建会话（`server/internal/service/waffo_pancake.go` 封装）。
    - `RequestAmount`（topup.go）为通用金额/最低充值校验入口，供前端预校验。
 
 2. **网关支付**：用户在支付网关完成支付，与 new-api 分离。
@@ -67,7 +67,7 @@ sequenceDiagram
 
 4. **手动补单**（`AdminCompleteTopUp`，topup.go）：管理员在网关回调失败时手动确认入账的补救通道，复用同一入账逻辑。
 
-> 订阅付款（`controller/subscription_payment_*.go`，路由 `POST /api/subscription/{gateway}/pay` + `/api/subscription/epay/notify`）走同一组支付网关，区别在于入账目标是订阅计划而非用户配额；其支付网关交互与本流程同构，订阅侧的入账/状态推进见 [subscription.md](subscription.md)。
+> 订阅付款（`server/internal/controller/subscription_payment_*.go`，路由 `POST /api/subscription/{gateway}/pay` + `/api/subscription/epay/notify`）走同一组支付网关，区别在于入账目标是订阅计划而非用户配额；其支付网关交互与本流程同构，订阅侧的入账/状态推进见 [subscription.md](subscription.md)。
 
 ## 涉及的 L3 逻辑模块
 

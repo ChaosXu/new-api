@@ -12,7 +12,7 @@ sequenceDiagram
     participant Ctrl as 控制器<br/>(RelayTask)
     participant Submit as 任务提交<br/>(relay.RelayTaskSubmit)
     participant Adapt as 渠道适配框架<br/>(TaskAdaptor)
-    participant Poll as 任务轮询<br/>(service/task_polling)
+    participant Poll as 任务轮询<br/>(server/internal/service/task_polling)
     participant Bill as 计费结算
     participant Data as 数据访问
     participant Upstream as 上游 AI
@@ -61,13 +61,13 @@ sequenceDiagram
 ## 流程说明
 
 **阶段一：提交任务**
-1. 请求经鉴权/限流/distributor 选渠道后，到控制器 `RelayTask`（`controller/relay.go`），转交 `relay.RelayTaskSubmit`（`relay/relay_task.go:145`）。
+1. 请求经鉴权/限流/distributor 选渠道后，到控制器 `RelayTask`（`server/internal/controller/relay.go`），转交 `relay.RelayTaskSubmit`（`server/internal/relay/relay_task.go:145`）。
 2. `EstimateBilling`（191 行）：TaskAdaptor 从请求中抽取计费因子（视频秒数、分辨率等）返回 OtherRatios 倍率。
 3. `PreConsumeBilling`（208 行）：按估算预扣配额（防超用，首次提交必扣）。
 4. `DoRequest` + `DoResponse`：向上游提交任务，拿到 `upstreamTaskID` 与任务初态。
 5. 创建 Task 记录（数据访问），返回任务 ID 给调用方。
 
-**阶段二：后台轮询**（`service/task_polling.go`，与调用方分离）
+**阶段二：后台轮询**（`server/internal/service/task_polling.go`，与调用方分离）
 6. `RunTaskPollingOnce`（108 行）定时 sweep 未完成的任务，`DispatchPlatformUpdate`（179 行）按平台（Suno/Midjourney/视频）分组分发。
 7. 对每个任务调 TaskAdaptor 查询上游状态；若完成，状态推进到终态，调 `PostTaskConsumeQuota` 按实际用量结算（预扣 vs 实际差额），写日志、更新配额。
 8. `sweepTimedOutTasks`（44 行）清理超时任务。

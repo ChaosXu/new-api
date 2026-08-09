@@ -44,9 +44,9 @@ sequenceDiagram
 ## 流程说明
 
 **阶段一：预扣（执行前）**
-1. distributor 中间件（`middleware/distributor.go:Distribute`）按分组/优先级/权重选渠道（`service.CacheGetRandomSatisfiedChannel`）。
+1. distributor 中间件（`server/internal/middleware/distributor.go:Distribute`）按分组/优先级/权重选渠道（`service.CacheGetRandomSatisfiedChannel`）。
 2. 估算价格：按比例模式用模型倍率/分组倍率乘算；分层模式经表达式引擎编译表达式算价。得到预扣额度。
-3. `PreConsumeBilling`（`controller/relay.go:167` / `relay/relay_task.go:208`）：检查余额并扣减预扣配额。**余额不足或饱和预扣超界都判不足**（防溢出绕过），返回 429。预扣成功才放行执行。
+3. `PreConsumeBilling`（`server/internal/controller/relay.go:167` / `server/internal/relay/relay_task.go:208`）：检查余额并扣减预扣配额。**余额不足或饱和预扣超界都判不足**（防溢出绕过），返回 429。预扣成功才放行执行。
 
 **阶段二：执行** — 见同步中继/异步任务流程（调用上游、拿到 usage）。
 
@@ -68,7 +68,7 @@ sequenceDiagram
 ## 项目约束（计费安全铁律）
 
 - **永不产生负扣费**：所有用户可控乘数（image n、video seconds、分辨率）必须先有界校验（400 拒绝）再进计费。
-- **配额换算必须用 `common/quota_math.go` 的饱和函数**（`QuotaFromFloat`/`QuotaRound`/`QuotaFromDecimal`，int32 上限），禁止裸 `int()` 转换。
+- **配额换算必须用 `server/internal/common/quota_math.go` 的饱和函数**（`QuotaFromFloat`/`QuotaRound`/`QuotaFromDecimal`，int32 上限），禁止裸 `int()` 转换。
 - **饱和事件必须审计**：用 `*Checked` 变体捕获 `QuotaClamp`，写日志 `admin_info.quota_saturation` + `LogWarn`。
 - **乘数经 `PriceData.AddOtherRatio`**：拒绝非正/NaN/Inf，禁止直接写 OtherRatios。
-- 分层计费改动前**必须先读 `pkg/billingexpr/expr.md`**。
+- 分层计费改动前**必须先读 `server/pkg/billingexpr/expr.md`**。

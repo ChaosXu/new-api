@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`service/task.go`、`service/task_polling.go`、`service/midjourney.go`、`service/subscription_reset_task.go`、`service/system_task.go`、`service/webhook.go`
+`server/internal/service/task.go`、`server/internal/service/task_polling.go`、`server/internal/service/midjourney.go`、`server/internal/service/subscription_reset_task.go`、`server/internal/service/system_task.go`、`server/internal/service/webhook.go`
 
 ## 依赖（内部逻辑模块）
 

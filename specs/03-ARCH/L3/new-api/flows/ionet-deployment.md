@@ -1,6 +1,6 @@
 # io.net 部署管理流程
 
-> 管理 io.net（IONET）云上的 GPU 部署实例——创建/查询/延长部署、管理容器、硬件选择、位置选择等。这是一个相对独立的云资源管理业务，经 `pkg/ionet` 客户端与 io.net API 交互。
+> 管理 io.net（IONET）云上的 GPU 部署实例——创建/查询/延长部署、管理容器、硬件选择、位置选择等。这是一个相对独立的云资源管理业务，经 `server/pkg/ionet` 客户端与 io.net API 交互。
 
 ## 时序图
 
@@ -9,7 +9,7 @@ sequenceDiagram
     autonumber
     participant Admin as 管理员
     participant Ctrl as 控制器(deployment.go)
-    participant IoNet as io.net 客户端<br/>(pkg/ionet)
+    participant IoNet as io.net 客户端<br/>(server/pkg/ionet)
     participant Platform as io.net 平台
     participant Data as 数据访问
 
@@ -41,9 +41,9 @@ sequenceDiagram
 
 ## 流程说明
 
-1. **资源查询**：查 io.net 的可用副本、硬件类型、位置（经 `pkg/ionet` 客户端转调 io.net API）。
+1. **资源查询**：查 io.net 的可用副本、硬件类型、位置（经 `server/pkg/ionet` 客户端转调 io.net API）。
 2. **创建部署**：`CreateDeployment`（硬件/位置/时长）→ io.net 创建 → 记录 SystemInstance（数据访问）。
-3. **查询/管理**：部署列表/详情/搜索、容器列表/详情、延长部署、更新部署设置/重命名/删除——都经 `pkg/ionet` 转调 io.net API。
+3. **查询/管理**：部署列表/详情/搜索、容器列表/详情、延长部署、更新部署设置/重命名/删除——都经 `server/pkg/ionet` 转调 io.net API。
 4. **系统实例维护**（后台）：`StartSystemInstanceReporter` 上报实例状态、`DeleteStaleSystemInstances` 清理过期实例。
 
 > 另有 VendorMeta（供应商元数据）CRUD，配合上游模型同步使用。

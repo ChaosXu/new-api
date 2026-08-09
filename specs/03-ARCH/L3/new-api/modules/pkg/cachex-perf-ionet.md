@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`pkg/cachex/`、`pkg/perf_metrics/`、`pkg/ionet/`
+`server/pkg/cachex/`、`server/pkg/perf_metrics/`、`server/pkg/ionet/`
 
 ## 依赖（内部逻辑模块）
 

@@ -12,9 +12,9 @@
 
 ## 覆盖代码
 
-`oauth/`（discord.go/github.go/generic.go 等用户登录 OAuth 提供者）
+`server/internal/oauth/`（discord.go/github.go/generic.go 等用户登录 OAuth 提供者）
 
-> 注：Codex 渠道的 OAuth 机器凭证刷新（`service/codex_oauth.go`）属于 Codex 集成模块（见 [../service/codex-integration.md](../service/codex-integration.md)），非用户登录 OAuth。
+> 注：Codex 渠道的 OAuth 机器凭证刷新（`server/internal/service/codex_oauth.go`）属于 Codex 集成模块（见 [../service/codex-integration.md](../service/codex-integration.md)），非用户登录 OAuth。
 
 ## 依赖（内部逻辑模块）
 

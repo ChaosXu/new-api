@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`service/passkey/`（WebAuthn 实例构建、注册/登录会话）
+`server/internal/service/passkey/`（WebAuthn 实例构建、注册/登录会话）
 
 ## 依赖（内部逻辑模块）
 

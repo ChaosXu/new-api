@@ -15,7 +15,7 @@
 
 ## 覆盖代码
 
-`service/codex_oauth.go`（OAuth 刷新 + HTTP 客户端 + JWT 提取）、`service/codex_credential_refresh.go`（按需刷新 + DB 持久化）、`service/codex_credential_refresh_task.go`（后台调度器，仅主节点运行）、`service/codex_channel_models.go`（模型发现 + 401 自动刷新）、`service/codex_models.go`（客户端版本 + 原始模型拉取）、`service/codex_wham_usage.go`（WHAM 用量/限额重置积分）、`controller/codex_usage.go`（仪表盘用量 handler）
+`server/internal/service/codex_oauth.go`（OAuth 刷新 + HTTP 客户端 + JWT 提取）、`server/internal/service/codex_credential_refresh.go`（按需刷新 + DB 持久化）、`server/internal/service/codex_credential_refresh_task.go`（后台调度器，仅主节点运行）、`server/internal/service/codex_channel_models.go`（模型发现 + 401 自动刷新）、`server/internal/service/codex_models.go`（客户端版本 + 原始模型拉取）、`server/internal/service/codex_wham_usage.go`（WHAM 用量/限额重置积分）、`server/internal/controller/codex_usage.go`（仪表盘用量 handler）
 
 ## 内部子能力
 

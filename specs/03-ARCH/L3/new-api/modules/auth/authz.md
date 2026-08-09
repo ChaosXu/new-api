@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`service/authz/`（adapter.go/assignment.go 等角色与策略）
+`server/internal/service/authz/`（adapter.go/assignment.go 等角色与策略）
 
 ## 依赖（内部逻辑模块）
 

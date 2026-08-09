@@ -38,8 +38,8 @@ sequenceDiagram
 
 ## 流程说明
 
-1. **模型同步**（`controller/model_sync.go:SyncUpstreamModels`）：从上游 new-api 的 models/vendors URL 拉取（`fetchJSON`），更新本地的 VendorMeta（供应商）、ModelMeta（模型元数据）与渠道能力（ChannelAbilities，决定某渠道支持哪些模型）。`SyncUpstreamPreview` 只返回变更预览不落库。
-2. **倍率同步**（`controller/ratio_sync.go:FetchUpstreamRatios`）：拉取上游的模型倍率/分组倍率，更新 `ratio_setting`（计费倍率配置）。
+1. **模型同步**（`server/internal/controller/model_sync.go:SyncUpstreamModels`）：从上游 new-api 的 models/vendors URL 拉取（`fetchJSON`），更新本地的 VendorMeta（供应商）、ModelMeta（模型元数据）与渠道能力（ChannelAbilities，决定某渠道支持哪些模型）。`SyncUpstreamPreview` 只返回变更预览不落库。
+2. **倍率同步**（`server/internal/controller/ratio_sync.go:FetchUpstreamRatios`）：拉取上游的模型倍率/分组倍率，更新 `ratio_setting`（计费倍率配置）。
 3. **定时探测**：经系统任务调度器的 `modelUpdateHandler`（见 background-tasks.md），按渠道定时 `DetectChannelUpstreamModelUpdates` 探测模型变更并应用。
 
 ## 涉及的 L3 逻辑模块

@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`relay/common/`（RelayInfo、BillingSettler、relay_info.go、billing.go 等）
+`server/internal/relay/common/`（RelayInfo、BillingSettler、relay_info.go、billing.go 等）
 
 ## 依赖（内部逻辑模块）
 

@@ -46,15 +46,15 @@ sequenceDiagram
 
 ## 流程说明
 
-**标准 CRUD**：渠道的增删改查（`controller/channel.go`），管理员配置渠道（类型/密钥/BaseURL/模型列表/分组等）。CRUD 不涉及跨模块协作。
+**标准 CRUD**：渠道的增删改查（`server/internal/controller/channel.go`），管理员配置渠道（类型/密钥/BaseURL/模型列表/分组等）。CRUD 不涉及跨模块协作。
 
 **场景一：渠道测试**（主动探活）
-1. 管理员触发测试，控制器查渠道配置后，构造一次测试请求（`controller/channel-test.go`，发 `/v1/chat/completions` 探活），经编排入口 + 适配器发真实调用。
-2. 返回成功/失败、延迟、余额（部分渠道支持余额查询，`controller/channel-billing.go`）。
+1. 管理员触发测试，控制器查渠道配置后，构造一次测试请求（`server/internal/controller/channel-test.go`，发 `/v1/chat/completions` 探活），经编排入口 + 适配器发真实调用。
+2. 返回成功/失败、延迟、余额（部分渠道支持余额查询，`server/internal/controller/channel-billing.go`）。
 
 **场景二：自动禁用**（被动，中继失败触发）
-3. 中继请求失败时（`controller/relay.go:367`），`ShouldDisableChannel`（`service/channel.go:45`）判定错误是否严重（鉴权失败/余额不足/连续超时等）。
-4. 若渠道 `AutoBan` 开启且判定应禁用，`DisableChannel`（`service/channel.go:19`）把渠道状态置为禁用 + 记录原因。此后 distributor 选渠道时跳过它。
+3. 中继请求失败时（`server/internal/controller/relay.go:367`），`ShouldDisableChannel`（`server/internal/service/channel.go:45`）判定错误是否严重（鉴权失败/余额不足/连续超时等）。
+4. 若渠道 `AutoBan` 开启且判定应禁用，`DisableChannel`（`server/internal/service/channel.go:19`）把渠道状态置为禁用 + 记录原因。此后 distributor 选渠道时跳过它。
 
 **场景三：自动启用恢复**（定时探活，可选）
 5. 若配置允许，定时对被禁渠道探活，成功则恢复启用。
@@ -71,4 +71,4 @@ sequenceDiagram
 ## 项目约束
 
 - `ShouldDisableChannel` 的判定逻辑改动需谨慎：误禁用会误伤正常渠道，漏禁用会让故障渠道持续拖慢中继（重试链路）。
-- 渠道测试/余额查询若走真实上游，会产生真实计费（`controller/channel-test.go` 构造的 `/v1/chat/completions` 路径）。
+- 渠道测试/余额查询若走真实上游，会产生真实计费（`server/internal/controller/channel-test.go` 构造的 `/v1/chat/completions` 路径）。

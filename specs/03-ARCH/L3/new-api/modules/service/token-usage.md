@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`service/token_counter.go`、`service/token_estimator.go`、`service/tokenizer.go`、`service/usage_helpr.go`、`service/text_quota.go`（文本配额）、`service/image.go`（图像计费因子）、`service/audio.go`（音频时长解析计费）
+`server/internal/service/token_counter.go`、`server/internal/service/token_estimator.go`、`server/internal/service/tokenizer.go`、`server/internal/service/usage_helpr.go`、`server/internal/service/text_quota.go`（文本配额）、`server/internal/service/image.go`（图像计费因子）、`server/internal/service/audio.go`（音频时长解析计费）
 
 ## 依赖（内部逻辑模块）
 

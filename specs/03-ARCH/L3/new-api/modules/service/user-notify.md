@@ -13,7 +13,7 @@
 
 ## 覆盖代码
 
-`service/user_notify.go`（NotifyRootUser、NotifyUpstreamModelUpdateWatchers、NotifyUser 分发、sendEmailNotify、sendBarkNotify、sendGotifyNotify）、`service/notify-limit.go`（CheckNotificationLimit、Redis/内存限流、清理任务）、`service/webhook.go`（SendWebhookNotify、generateSignature、WebhookPayload）
+`server/internal/service/user_notify.go`（NotifyRootUser、NotifyUpstreamModelUpdateWatchers、NotifyUser 分发、sendEmailNotify、sendBarkNotify、sendGotifyNotify）、`server/internal/service/notify-limit.go`（CheckNotificationLimit、Redis/内存限流、清理任务）、`server/internal/service/webhook.go`（SendWebhookNotify、generateSignature、WebhookPayload）
 
 ## 依赖（内部逻辑模块）
 

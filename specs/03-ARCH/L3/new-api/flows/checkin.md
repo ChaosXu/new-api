@@ -32,7 +32,7 @@ sequenceDiagram
 
 ## 流程说明
 
-1. **签到**（`controller/checkin.go:DoCheckin`，47 行）：调 `model.UserCheckin`，该函数在数据层完成幂等校验（本周期是否已签）+ 随机额度生成（setting.MinQuota ~ setting.MaxQuota）+ 签到记录创建 + 用户配额入账。
+1. **签到**（`server/internal/controller/checkin.go:DoCheckin`，47 行）：调 `model.UserCheckin`，该函数在数据层完成幂等校验（本周期是否已签）+ 随机额度生成（setting.MinQuota ~ setting.MaxQuota）+ 签到记录创建 + 用户配额入账。
 2. 已签则返回 400；成功则写系统日志（`model.RecordLog`，"用户签到，获得额度 X"）。
 3. **查状态**（`GetCheckinStatus`）：返回用户当月签到历史/统计 + 可奖励额度区间。
 

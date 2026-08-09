@@ -12,7 +12,7 @@ HTTP 请求的会话鉴权与 API 令牌（Token）鉴权。校验请求方的�
 
 ## 覆盖代码
 
-`middleware/auth.go`、`middleware/auth_origin.go`、`service/auth_session.go`、`service/auth_token.go`、`service/auth_cleanup.go`
+`server/internal/middleware/auth.go`、`server/internal/middleware/auth_origin.go`、`server/internal/service/auth_session.go`、`server/internal/service/auth_token.go`、`server/internal/service/auth_cleanup.go`
 
 ## 依赖（内部逻辑模块）
 

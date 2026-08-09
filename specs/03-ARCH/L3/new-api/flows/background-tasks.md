@@ -1,13 +1,13 @@
 # 后台自动维护任务总览
 
-> new-api 在 `main.go` 启动时拉起一批**系统级后台任务**（无 HTTP 入口，自动周期运行）。它们承载请求驱动流程覆盖不到的系统维护职责：周期任务调度、配额聚合、凭证刷新、鉴权产物清理、缓存/策略同步等。本文是这一整类的总览。
+> new-api 在 `server/cmd/new-api/main.go` 启动时拉起一批**系统级后台任务**（无 HTTP 入口，自动周期运行）。它们承载请求驱动流程覆盖不到的系统维护职责：周期任务调度、配额聚合、凭证刷新、鉴权产物清理、缓存/策略同步等。本文是这一整类的总览。
 
 ## 时序图（启动与调度）
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Main as main.go
+    participant Main as main.go 入口
     participant Runner as 系统任务调度器<br/>(StartSystemTaskRunner)
     participant Handler as 任务处理器
     participant Data as 数据访问
@@ -27,7 +27,7 @@ sequenceDiagram
     Note over Runner: 定期清理 stale 锁<br/>系统任务调度间隔 15s
 ```
 
-## 任务清单（main.go 启动的后台任务）
+## 任务清单（`server/cmd/new-api/main.go` 启动的后台任务）
 
 | 任务 | 启动入口 | 职责 | 协作模块 |
 | --- | --- | --- | --- |
@@ -48,8 +48,8 @@ sequenceDiagram
 
 ## 流程说明
 
-1. **启动**：`main.go` 在服务启动时用 `go xxx()` 拉起各后台任务（goroutine），它们与 HTTP 服务并行运行、整个生命周期常驻。
-2. **系统任务调度器**（`service/system_task.go`）是核心：它是一个通用框架，`RegisterSystemTaskHandler` 注册处理器（渠道测试/模型更新/MJ 轮询/异步任务轮询/日志清理），`StartSystemTaskRunner` 每 15s 扫描 due 任务，抢分布式锁后分发到对应 handler。多实例部署时靠锁防重复执行。
+1. **启动**：`server/cmd/new-api/main.go` 在服务启动时用 `go xxx()` 拉起各后台任务（goroutine），它们与 HTTP 服务并行运行、整个生命周期常驻。
+2. **系统任务调度器**（`server/internal/service/system_task.go`）是核心：它是一个通用框架，`RegisterSystemTaskHandler` 注册处理器（渠道测试/模型更新/MJ 轮询/异步任务轮询/日志清理），`StartSystemTaskRunner` 每 15s 扫描 due 任务，抢分布式锁后分发到对应 handler。多实例部署时靠锁防重复执行。
 3. **订阅重置**等独立任务不挂调度器，各自定时循环（见 subscription.md）。
 4. **纯监控类**（`common.Monitor`/`StartPyroScope`/`StartSystemMonitor`）是基础设施监控，非业务流程，不在此详述。
 

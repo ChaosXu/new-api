@@ -20,13 +20,13 @@ HTTP API 的请求处理器，处理用户、渠道、令牌、日志、计费�
 
 ## 覆盖代码
 
-`controller/`（全部控制器文件：用户/渠道/令牌/日志/计费/订阅/任务/Passkey/io.net/签到/兑换码/上游同步等 CRUD handler；`video_proxy.go`+`video_proxy_gemini.go` 视频代理；`telegram.go`/`wechat.go` 第三方登录；`codex_usage.go` Codex 用量；`pricing.go`/`ratio_config.go`/`ratio_sync.go` 定价倍率；`performance.go`/`perf_metrics.go`/`system_info.go` 性能监控；`usedata.go`/`rankings.go` 配额看板）
+`server/internal/controller/`（全部控制器文件：用户/渠道/令牌/日志/计费/订阅/任务/Passkey/io.net/签到/兑换码/上游同步等 CRUD handler；`video_proxy.go`+`video_proxy_gemini.go` 视频代理；`telegram.go`/`wechat.go` 第三方登录；`codex_usage.go` Codex 用量；`pricing.go`/`ratio_config.go`/`ratio_sync.go` 定价倍率；`performance.go`/`perf_metrics.go`/`system_info.go` 性能监控；`usedata.go`/`rankings.go` 配额看板）
 
-> 注：支付网关的 controller handler 与 service 层支付封装（`service/epay.go`、`service/waffo_pancake.go`）协作完成充值与支付流程，详见 [flows/topup-payment.md](../../flows/topup-payment.md)。
+> 注：支付网关的 controller handler 与 service 层支付封装（`server/internal/service/epay.go`、`server/internal/service/waffo_pancake.go`）协作完成充值与支付流程，详见 [flows/topup-payment.md](../../flows/topup-payment.md)。
 
 ## 依赖（内部逻辑模块）
 
-- 业务逻辑（service 全部业务能力）
+- 业务逻辑（server/internal/service 全部业务能力）
 - 渠道适配框架（渠道测试等直接调用适配器）
 - 数据访问
 - 鉴权（鉴权中间件、权限授权）

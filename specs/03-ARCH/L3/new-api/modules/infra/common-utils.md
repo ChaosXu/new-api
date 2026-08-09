@@ -13,7 +13,7 @@
 
 ## 覆盖代码
 
-`common/`（Redis 客户端、邮件、加密、配额换算 `quota_math.go`、SSRF 防护、系统监控 `system_monitor*.go`、磁盘缓存 `disk_cache*.go`、性能配置 `performance_config.go`、节点身份 `node_identity.go`、goroutine 池 `gopool.go`、Pyroscope `pyro.go`、pprof `pprof.go`、topup 倍率 `topup-ratio.go`、渠道端点默认值 `endpoint_defaults.go`/`endpoint_type.go`、SSE 事件 `custom-event.go`、JSON 包装 `json.go`、环境变量、速率限制器等）、`common/limiter/`（分布式限流器）、`logger/`（全局日志）、`i18n/`（go-i18n 多语言）
+`server/internal/common/`（Redis 客户端、邮件、加密、配额换算 `quota_math.go`、SSRF 防护、系统监控 `system_monitor*.go`、磁盘缓存 `disk_cache*.go`、性能配置 `performance_config.go`、节点身份 `node_identity.go`、goroutine 池 `gopool.go`、Pyroscope `pyro.go`、pprof `pprof.go`、topup 倍率 `topup-ratio.go`、渠道端点默认值 `endpoint_defaults.go`/`endpoint_type.go`、SSE 事件 `custom-event.go`、JSON 包装 `json.go`、环境变量、速率限制器等）、`server/internal/common/limiter/`（分布式限流器）、`server/internal/logger/`（全局日志）、`server/internal/i18n/`（go-i18n 多语言）
 
 ## 依赖（内部逻辑模块）
 
@@ -23,4 +23,4 @@
 ## 项目约束
 
 - **JSON 铁律**：所有 marshal/unmarshal 必须用 `common.*` 包装函数，**禁止直接用 `encoding/json`**（`json.RawMessage`/`json.Number` 仅可作类型引用）。
-- 配额换算必须用 `common/quota_math.go` 的饱和函数（防溢出/防负扣费，int32 上限）。
+- 配额换算必须用 `server/internal/common/quota_math.go` 的饱和函数（防溢出/防负扣费，int32 上限）。

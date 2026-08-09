@@ -12,11 +12,11 @@
 
 ## 覆盖代码
 
-`constant/`（channel.go/api_type.go 等枚举常量）、`types/`（PriceData/concurrent Map/Set 等基础结构）、`dto/`（异步任务 DTO）
+`server/internal/constant/`（channel.go/api_type.go 等枚举常量）、`server/internal/types/`（PriceData/concurrent Map/Set 等基础结构）、`server/internal/dto/`（异步任务 DTO）
 
 ## 依赖（内部逻辑模块）
 
-- 协议转换类型（relaykit/types 部分基础类型引用）
+- 协议转换类型（server/relaykit/types 部分基础类型引用）
 
 ## 项目约束
 

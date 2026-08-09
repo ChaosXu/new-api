@@ -55,14 +55,14 @@ sequenceDiagram
 
 ## 流程说明
 
-**阶段一：登录建立会话**（四选一，入口都在 `controller/user.go` + `router/api-router.go`）
+**阶段一：登录建立会话**（四选一，入口都在 `server/internal/controller/user.go` + `server/internal/router/api-router.go`）
 1. **密码登录**：`Login`（user.go:40）→ 查用户 + bcrypt 校验密码 → 生成 session。前置 Turnstile 人机验证 + 关键限流。
 2. **2FA**：密码校验通过后若启用 2FA，要求二次提交 TOTP 验证码（`Verify2FALogin`，pquerna/otp）。
-3. **OAuth**：跳转外部提供商（GitHub/Discord/LinuxDo/OIDC/自定义）→ 回调处理授权码 → 换 token → 拉用户信息 → 按外部 ID 查/建绑定（oauth 模块）。
+3. **OAuth**：跳转外部提供商（GitHub/Discord/LinuxDo/OIDC/自定义）→ 回调处理授权码 → 换 token → 拉用户信息 → 按外部 ID 查/建绑定（server/internal/oauth 模块）。
 4. **Passkey**：两步——`PasskeyLoginBegin` 发起挑战 + `PasskeyLoginFinish` 用 WebAuthn 验证断言（service/passkey）。
 
 **阶段二：每次请求的鉴权**（中间件链）
-5. `session-auth`（`middleware/auth.go`）：解析身份——Cookie 会话 或 API Key（Token）。Token 鉴权查令牌+用户+分组注入上下文。
+5. `session-auth`（`server/internal/middleware/auth.go`）：解析身份——Cookie 会话 或 API Key（Token）。Token 鉴权查令牌+用户+分组注入上下文。
 6. 限流校验（按用户/令牌/分组配额）。
 7. 需要权限的接口经 `authz`（service/authz，Casbin RBAC）校验角色能否访问资源。
 8. 注入上下文键（userId/tokenId/group 等），供后续中间件与控制器使用。

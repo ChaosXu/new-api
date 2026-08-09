@@ -12,7 +12,7 @@
 
 ## 覆盖代码
 
-`relay/channel/`（接口定义）、`relay/channel/*/`（39 个同步适配器：openai/claude/gemini/aws/ali 等）、`relay/channel/task/*/`（11 个异步任务适配器：kling/sora/vidu 等）、`relay/relay_adaptor.go`（按 APIType 分发到具体适配器）
+`server/internal/relay/channel/`（接口定义）、`server/internal/relay/channel/*/`（39 个同步适配器：openai/claude/gemini/aws/ali 等）、`server/internal/relay/channel/task/*/`（11 个异步任务适配器：kling/sora/vidu 等）、`server/internal/relay/relay_adaptor.go`（按 APIType 分发到具体适配器）
 
 ## 内部子能力
 
@@ -23,6 +23,6 @@
 ## 依赖（内部逻辑模块）
 
 - 中继上下文（用 RelayInfo）
-- 协议转换（部分适配器复用 relaykit 的转换逻辑）
+- 协议转换（部分适配器复用 server/relaykit 的转换逻辑）
 - 业务逻辑（渠道选择、令牌计数等）
 - 配置（模型适配参数、运营设置）
